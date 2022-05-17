@@ -1,0 +1,6 @@
+# don't upload confidential data
+raw_data/
+processed_data/
+
+# don't upload figures/tables
+output_figures_tables/
