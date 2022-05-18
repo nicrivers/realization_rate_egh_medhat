@@ -32,7 +32,7 @@ res <- dat %>%
   rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
   cor()
 
-png(file = "../output_figures_tables/correlation_plot.png",   # The directory you want to save the file in
+png(file = "../output_figures_tables/correlation_plot.png",
     width = 6, # The width of the plot in inches
     height = 6,
     units = "in",
@@ -110,7 +110,7 @@ p_mbm_es <- ggplot(mbm_coefs, aes(x=reorder(term, estimate), y=estimate, colour=
   scale_y_continuous(labels=scales::percent_format()) +
   theme(legend.position = c(0.85,0.3)) 
 
-ggsave(p_mbm_es, "../output_figures_tables/mbm_energy_savings.png", width=6, height=4)         
+ggsave(p_mbm_es, filename="../output_figures_tables/mbm_energy_savings.png", width=6, height=4)         
 
 p_mbm_count <- mbm_coefs %>%
   group_by(term) %>%
@@ -127,4 +127,4 @@ p_mbm_count <- mbm_coefs %>%
 p_mbm_es + p_mbm_count + plot_layout(ncol=2, nrow=1, widths =c(2,1))
 
 p_w_mbm <- p_mbm_es + p_mbm_count + plot_layout(ncol=2, nrow=1, widths =c(2,1))
-ggsave(p_w_mbm, filename="../output_figures_tables/mbm_energy_savings_combined.png", width=8, height=6)         
+ggsave(p_w_mbm, filename ="../output_figures_tables/mbm_energy_savings_combined.png", width=8, height=6)         
