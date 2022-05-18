@@ -1,1 +1,2 @@
-RScript .\00_source_all.R
+cd scripts
+RScript 00_source_all.R
