@@ -1,6 +1,6 @@
 # don't upload confidential data
-raw_data/
-processed_data/
+raw_data/*.csv
+processed_data/*.dta
 
 # don't upload figures/tables
 #output_figures_tables/
