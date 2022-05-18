@@ -3,4 +3,4 @@ raw_data/
 processed_data/
 
 # don't upload figures/tables
-output_figures_tables/
+#output_figures_tables/
