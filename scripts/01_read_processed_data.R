@@ -30,6 +30,13 @@ dat <- dat %>%
   # Convert to GJ by dividing by 277.778
   mutate(
     energy = gas*1.0551 + elec/277.778
+  ) %>%
+  # For total energy consumption, need to convert all units to Gj
+  # 1 kWh = 0.0036 GJ
+  # 1 m3 = 0.0373 GJ: https://www.nrcan.gc.ca/energy/energy-sources-distribution/natural-gas/natural-gas-primer/5641
+  mutate(
+    postretrofit_energy = postretrofit_electricalconsump * 0.0036 + postretrofit_naturalgasconsum * 0.0373,
+    preretrofit_energy = preretrofit_electicalconsumpti * 0.0036 + preretrofit_naturalgasconsum * 0.0373
   )
 
 # Create regression data
