@@ -50,3 +50,19 @@ etable(list(m1_ever_treated_energy, m1_w_never_treated_energy, m1_all_energy), t
 # Look at the event study results to understand why. The only-treated event study
 # shows that these estimates are likely biased. This is bc we are comparing
 # newly treated households to previously treated households with the ever-treated sample.
+
+## Summary statistics
+# house characteristics
+st(data = dat %>%
+     group_by(id) %>%
+     # For non-participants, replace NA with 0
+     mutate(across(contains("done"), ~replace_na(.,0))) %>%
+     summarise(across(c(contains("done"),contains("preretrofit"),contains("postretrofit")), mean)) %>%
+     select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+     rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)), 
+   file = "../output_figures_tables/house_sumtable.tex", out="latex")
+
+# energy consumption characteristics
+st(data = dat %>%
+     select(elec, gas, energy),
+   file = "../output_figures_tables/month_sumtable.tex", out="latex")

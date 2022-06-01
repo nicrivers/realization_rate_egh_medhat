@@ -10,6 +10,7 @@ library(patchwork)
 library(did)
 library(broom)
 library(corrplot)
+library(vtable)
 
 source(here::here("scripts", "01_read_processed_data.R"))
 source(here::here("scripts", "02_graphical_analysis.R"))
