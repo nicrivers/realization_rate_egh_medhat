@@ -77,6 +77,22 @@ ggplot(mbm_projected_coefs, aes(x=reorder(term, estimate), y=estimate, colour=fu
 
 ggsave("../output_figures_tables/projected_es_mbm.png", width = 6, height=4)
 
+## energy only
+ggplot(mbm_projected_coefs %>% filter(fuel == "energy"), aes(x=reorder(term, estimate), y=estimate)) +
+  geom_point(position=position_dodge(width=0.5)) +
+  geom_errorbar(position=position_dodge(width=0.5),
+                aes(ymin=estimate - 1.96*std.error,
+                    ymax=estimate + 1.96*std.error)) +
+  geom_hline(yintercept = 0) +
+  labs(x=NULL,
+       y="Projected change in energy consumption") +
+  scale_y_continuous(labels=scales::percent_format()) +
+  coord_flip() +
+  theme_bw() +
+  theme(legend.position = c(0.2,0.8)) +
+  scale_colour_brewer(name=NULL, palette = "Set1")
+
+ggsave("../output_figures_tables/projected_es_mbm_all_energy.png", width = 6, height=4)
 
 ##### 
 # Realization rate -- aggregate retrofits
@@ -167,3 +183,27 @@ ggplot(projected_vs_realized,
   geom_text(aes(y=estimated_savings, label=rr_label), size=3, nudge_x = 0.25)
 
 ggsave("../output_figures_tables/mbm_realization_rate.png", width=8, height=6)
+
+## Energy only
+ggplot(projected_vs_realized %>% filter(fuel == "energy"),
+       aes(x=reorder(term, estimated_savings))) +
+  geom_point(aes(y=estimated_savings,colour="Estimated")) +
+  geom_point(aes(y=projected_savings, colour="Projected")) +
+  coord_flip() +
+  geom_hline(yintercept = 0) +
+  geom_errorbar(aes(ymin=estimated_savings-1.96*estimated_savings_se,
+                    ymax=estimated_savings+1.96*estimated_savings_se,
+                    colour="Estimated"),
+                width=0.25) +
+  geom_errorbar(aes(ymin=projected_savings-1.96*projected_savings_se,
+                    ymax=projected_savings+1.96*projected_savings_se,
+                    colour="Projected"),
+                width=0.25) +
+  labs(x=NULL,
+       y="Change in energy consumption") +
+  scale_y_continuous(labels=scales::percent_format(accuracy = 1)) +
+  theme_bw() +
+  scale_colour_brewer(name=NULL, palette="Set1") +
+  geom_text(aes(y=estimated_savings, label=rr_label), size=3, nudge_x = 0.25)
+
+ggsave("../output_figures_tables/mbm_realization_rate_all_energy.png", width=8, height=6)

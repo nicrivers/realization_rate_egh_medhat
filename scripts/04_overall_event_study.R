@@ -94,3 +94,17 @@ ggplot(all_es_coefs, aes(x=term, y=estimate, colour=model)) +
   scale_y_continuous(labels=scales::percent_format())
 
 ggsave("../output_figures_tables/event_study_plot.png", width=6, height=4)
+
+# Just plot TWFE model
+ggplot(all_es_coefs %>% filter(model == "TWFE-incl. never treated"), aes(x=term, y=estimate)) +
+  geom_point(position=position_dodge(width=0.5)) +
+  geom_errorbar(position=position_dodge(width=0.5),
+                aes(ymin=estimate-1.96*std.error,
+                    ymax=estimate+1.96*std.error)) +
+  scale_colour_brewer(palette="Set1", name=NULL) +
+  theme_bw() +
+  theme(legend.position = c(0.2,0.2)) +
+  labs(x="Years until treatment",
+       y="Impact on total energy consumption") +
+  scale_y_continuous(labels=scales::percent_format())
+ggsave("../output_figures_tables/event_study_plot_twfe_only.png", width=6, height=4)
