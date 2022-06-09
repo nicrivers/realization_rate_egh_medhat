@@ -1,5 +1,3 @@
-library(MatchIt)
-
 # pre-treatment data for matching
 # first pre-retrofit entrydate is  
 # > min(dat$preretrofit_entrydate, na.rm=T)
@@ -43,3 +41,5 @@ match_data <- match.data(m.out1) %>%
 m1_all_gas_match <- feols(log(gas) ~ treated_post | id + cons_date, data=match_data, cluster = ~id+cons_date, weights = match_data$weights)
 m1_all_elec_match <- feols(log(elec) ~ treated_post | id + cons_date , data=match_data, cluster = ~id+cons_date, weights = match_data$weights)
 etable(m1_all_gas_match, m1_all_elec_match)
+
+etable(m1_all_gas_match, m1_all_elec_match,  tex=TRUE, file="../output_figures_tables/did_matching_results.tex")
