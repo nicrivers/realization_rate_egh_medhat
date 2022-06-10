@@ -96,7 +96,7 @@ mbm_coefs <-
   mutate(term = gsub("treated\\_post\\:\\:TRUE\\:","",term)) %>%
   inner_join(p2_mbm)
 
-p_mbm_es <- ggplot(mbm_coefs, aes(x=reorder(term, estimate), y=estimate, colour=fuel)) +
+p_mbm_es <- ggplot(mbm_coefs, aes(x=reorder(term, number), y=estimate, colour=fuel)) +
   geom_point(position=position_dodge(width=0.5)) +
   geom_errorbar(position=position_dodge(width=0.5),
                 aes(ymin=estimate-1.96*std.error,
@@ -112,7 +112,7 @@ p_mbm_es <- ggplot(mbm_coefs, aes(x=reorder(term, estimate), y=estimate, colour=
 
 ggsave(p_mbm_es, filename="../output_figures_tables/mbm_energy_savings.png", width=6, height=4)         
 
-p_mbm_es_all_energy <- ggplot(mbm_coefs %>% filter(fuel == "energy"), aes(x=reorder(term, estimate), y=estimate)) +
+p_mbm_es_all_energy <- ggplot(mbm_coefs %>% filter(fuel == "energy"), aes(x=reorder(term, number), y=estimate)) +
   geom_point(position=position_dodge(width=0.5)) +
   geom_errorbar(position=position_dodge(width=0.5),
                 aes(ymin=estimate-1.96*std.error,
@@ -132,7 +132,7 @@ p_mbm_count <- mbm_coefs %>%
   group_by(term) %>%
   summarise(number=mean(number),
             estimate=mean(estimate)) %>%
-  ggplot(aes(x=reorder(term, estimate), y=number)) +
+  ggplot(aes(x=reorder(term, number), y=number)) +
   geom_col() +
   coord_flip() +
   theme_bw() +
@@ -150,7 +150,7 @@ p_mbm_count_all_energy <- mbm_coefs %>%
   group_by(term) %>%
   summarise(number=mean(number),
             estimate=mean(estimate)) %>%
-  ggplot(aes(x=reorder(term, estimate), y=number)) +
+  ggplot(aes(x=reorder(term, number), y=number)) +
   geom_col() +
   coord_flip() +
   theme_bw() +

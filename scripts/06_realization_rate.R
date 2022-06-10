@@ -59,9 +59,10 @@ mbm_projected_coefs <-
     tidy(projected_mbm_gas) %>% mutate(fuel = "gas"),
     tidy(projected_mbm_elec) %>% mutate(fuel = "electricity"),
     tidy(projected_mbm_energy) %>% mutate(fuel = "energy")
-  )
+  ) %>%
+  inner_join(p2_mbm)
 
-ggplot(mbm_projected_coefs, aes(x=reorder(term, estimate), y=estimate, colour=fuel)) +
+ggplot(mbm_projected_coefs, aes(x=reorder(term, number), y=estimate, colour=fuel)) +
   geom_point(position=position_dodge(width=0.5)) +
   geom_errorbar(position=position_dodge(width=0.5),
                 aes(ymin=estimate - 1.96*std.error,
@@ -77,8 +78,10 @@ ggplot(mbm_projected_coefs, aes(x=reorder(term, estimate), y=estimate, colour=fu
 
 ggsave("../output_figures_tables/projected_es_mbm.png", width = 6, height=4)
 
+        
+
 ## energy only
-ggplot(mbm_projected_coefs %>% filter(fuel == "energy"), aes(x=reorder(term, estimate), y=estimate)) +
+p_mbm_projected <- ggplot(mbm_projected_coefs %>% filter(fuel == "energy"), aes(x=reorder(term, number), y=estimate)) +
   geom_point(position=position_dodge(width=0.5)) +
   geom_errorbar(position=position_dodge(width=0.5),
                 aes(ymin=estimate - 1.96*std.error,
@@ -92,7 +95,12 @@ ggplot(mbm_projected_coefs %>% filter(fuel == "energy"), aes(x=reorder(term, est
   theme(legend.position = c(0.2,0.8)) +
   scale_colour_brewer(name=NULL, palette = "Set1")
 
-ggsave("../output_figures_tables/projected_es_mbm_all_energy.png", width = 6, height=4)
+ggsave(p_mbm_projected, "../output_figures_tables/projected_es_mbm_all_energy.png", width = 6, height=4)
+
+# Plot with number chart on right
+
+p_w_mbm_projected <- p_mbm_projected + p_mbm_count_all_energy + plot_layout(ncol=2, nrow=1, widths =c(2,1))
+ggsave(p_w_mbm_all_energy, filename ="../output_figures_tables/mbm_w_projeted_combined_all_energy.png", width=8, height=6) 
 
 ##### 
 # Realization rate -- aggregate retrofits
@@ -186,7 +194,7 @@ ggsave("../output_figures_tables/mbm_realization_rate.png", width=8, height=6)
 
 ## Energy only
 ggplot(projected_vs_realized %>% filter(fuel == "energy"),
-       aes(x=reorder(term, estimated_savings))) +
+       aes(x=reorder(term, number))) +
   geom_point(aes(y=estimated_savings,colour="Estimated")) +
   geom_point(aes(y=projected_savings, colour="Projected")) +
   coord_flip() +
@@ -207,3 +215,4 @@ ggplot(projected_vs_realized %>% filter(fuel == "energy"),
   geom_text(aes(y=estimated_savings, label=rr_label), size=3, nudge_x = 0.25)
 
 ggsave("../output_figures_tables/mbm_realization_rate_all_energy.png", width=8, height=6)
+
