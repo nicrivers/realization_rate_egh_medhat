@@ -77,7 +77,7 @@ st(data = dat %>%
      rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
      mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr)),
    group = "participant",
-   file = "../output_figures_tables/both_sumtable.tex",
+   file = "../output_figures_tables/both_sumtable.tex",out="latex",
    title = "Summary statistics\\label{tab:sumstat}")
 
 

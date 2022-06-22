@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.4.6)  22 JUN 2022 09:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.4.6)  22 JUN 2022 11:20
 entering extended mode
 **./mh_rr_draft_2022-05-18.tex
 (mh_rr_draft_2022-05-18.tex
@@ -1406,13 +1406,11 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-
-LaTeX Warning: Reference `' on page 1 undefined on input line 66.
-
-(../output_figures_tables/house_sumtable.tex) [1
+[1
 
 {C:/Users/nicri/AppData/Local/MiKTeX/pdftex/config/pdftex.map}]
-<../output_figures_tables/aggregate_trend_graph.png, id=61, 433.62pt x 433.62pt
+(../output_figures_tables/both_sumtable.tex) [2]
+<../output_figures_tables/aggregate_trend_graph.png, id=69, 433.62pt x 433.62pt
 >
 File: ../output_figures_tables/aggregate_trend_graph.png Graphic file (type png
 )
@@ -1420,30 +1418,29 @@ File: ../output_figures_tables/aggregate_trend_graph.png Graphic file (type png
 Package pdftex.def Info: ../output_figures_tables/aggregate_trend_graph.png  us
 ed on input line 79.
 (pdftex.def)             Requested size: 433.61894pt x 433.61894pt.
- [2] [3 <../output_figures_tables/aggregate_trend_graph.png>]
-(../output_figures_tables/main_energy_regression_diff_samples.tex)
-<../output_figures_tables/event_study_plot.png, id=75, 433.62pt x 289.08pt>
+
+(../output_figures_tables/main_energy_regression_diff_samples.tex) [3] [4 <../o
+utput_figures_tables/aggregate_trend_graph.png>]
+<../output_figures_tables/event_study_plot.png, id=81, 433.62pt x 289.08pt>
 File: ../output_figures_tables/event_study_plot.png Graphic file (type png)
 <use ../output_figures_tables/event_study_plot.png>
 Package pdftex.def Info: ../output_figures_tables/event_study_plot.png  used on
  input line 102.
 (pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
- [4]
-<../output_figures_tables/correlation_plot.png, id=85, 433.62pt x 433.62pt>
+ [5]
+<../output_figures_tables/correlation_plot.png, id=96, 433.62pt x 433.62pt>
 File: ../output_figures_tables/correlation_plot.png Graphic file (type png)
 <use ../output_figures_tables/correlation_plot.png>
 Package pdftex.def Info: ../output_figures_tables/correlation_plot.png  used on
  input line 119.
 (pdftex.def)             Requested size: 433.61894pt x 433.61894pt.
-<../output_figures_tables/projected_es_mbm.png, id=87, 433.62pt x 289.08pt>
+<../output_figures_tables/projected_es_mbm.png, id=98, 433.62pt x 289.08pt>
 File: ../output_figures_tables/projected_es_mbm.png Graphic file (type png)
 <use ../output_figures_tables/projected_es_mbm.png>
 Package pdftex.def Info: ../output_figures_tables/projected_es_mbm.png  used on
  input line 126.
 (pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
- [5 <../output_figures_tables/event_study_plot.png>] [6 <../output_figures_tabl
-es/correlation_plot.png (PNG copy)>]
-<../output_figures_tables/mbm_energy_savings_combined.png, id=105, 578.16pt x 4
+<../output_figures_tables/mbm_energy_savings_combined.png, id=100, 578.16pt x 4
 33.62pt>
 File: ../output_figures_tables/mbm_energy_savings_combined.png Graphic file (ty
 pe png)
@@ -1452,11 +1449,12 @@ Package pdftex.def Info: ../output_figures_tables/mbm_energy_savings_combined.p
 ng  used on input line 136.
 (pdftex.def)             Requested size: 455.30013pt x 341.47093pt.
 
-(../output_figures_tables/overall_realizationrate_log.tex) [7 <../output_figure
-s_tables/projected_es_mbm.png>] [8 <../output_figures_tables/mbm_energy_savings
-_combined.png>] (../output_figures_tables/overall_realizationrate_levels.tex)
-[9]
-<../output_figures_tables/mbm_realization_rate.png, id=123, 578.16pt x 433.62pt
+(../output_figures_tables/overall_realizationrate_log.tex) [6 <../output_figure
+s_tables/event_study_plot.png>] [7 <../output_figures_tables/correlation_plot.p
+ng (PNG copy)>] [8 <../output_figures_tables/projected_es_mbm.png>] [9 <../outp
+ut_figures_tables/mbm_energy_savings_combined.png>]
+(../output_figures_tables/overall_realizationrate_levels.tex)
+<../output_figures_tables/mbm_realization_rate.png, id=125, 578.16pt x 433.62pt
 >
 File: ../output_figures_tables/mbm_realization_rate.png Graphic file (type png)
 
@@ -1464,23 +1462,20 @@ File: ../output_figures_tables/mbm_realization_rate.png Graphic file (type png)
 Package pdftex.def Info: ../output_figures_tables/mbm_realization_rate.png  use
 d on input line 153.
 (pdftex.def)             Requested size: 455.30013pt x 341.47093pt.
- [10] [11 <../output_figures_tables/mbm_realization_rate.png>]
-(mh_rr_draft_2022-05-18.aux)
-
-LaTeX Warning: There were undefined references.
-
+ [10] [11 <../output_figures_tables/mbm_realization_rate.png>] (mh_rr_draft_202
+2-05-18.aux)
 Package rerunfilecheck Info: File `mh_rr_draft_2022-05-18.out' has not changed.
 
 (rerunfilecheck)             Checksum: 964D0BB19EE38D2822D0712E939D24A0;1959.
  ) 
 Here is how much of TeX's memory you used:
- 28551 strings out of 479321
- 496615 string characters out of 2856584
- 830225 words of memory out of 3000000
+ 28559 strings out of 479321
+ 496696 string characters out of 2856584
+ 831273 words of memory out of 3000000
  45134 multiletter control sequences out of 15000+600000
- 490894 words of font info for 347 fonts, out of 8000000 for 9000
+ 491618 words of font info for 353 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 86i,11n,133p,973b,426s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 86i,11n,133p,1530b,379s stack positions out of 5000i,500n,10000p,200000b,80000s
 {C:/Users/nicri/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/kpfonts/kpfonts
 -expert.enc}{C:/Users/nicri/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/
 8r.enc}<C:/Users/nicri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
@@ -1495,9 +1490,9 @@ ograms/MiKTeX/fonts/type1/public/kpfonts/jkpmn8a.pfb><C:/Users/nicri/AppData/Lo
 cal/Programs/MiKTeX/fonts/type1/public/kpfonts/jkpmnc.pfb><C:/Users/nicri/AppDa
 ta/Local/Programs/MiKTeX/fonts/type1/public/kpfonts/jkpmne.pfb><C:/Users/nicri/
 AppData/Local/Programs/MiKTeX/fonts/type1/public/kpfonts/jkpsy.pfb>
-Output written on mh_rr_draft_2022-05-18.pdf (11 pages, 483392 bytes).
+Output written on mh_rr_draft_2022-05-18.pdf (11 pages, 485318 bytes).
 PDF statistics:
- 180 PDF objects out of 1000 (max. 8388607)
+ 182 PDF objects out of 1000 (max. 8388607)
  31 named destinations out of 1000 (max. 500000)
  104579 words of extra memory for PDF output out of 106986 (max. 10000000)
 

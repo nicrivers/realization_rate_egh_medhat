@@ -10,3 +10,4 @@ written/*.aux
 written/*.gz
 written/*.out
 written/*.txt
+written/*.log
