@@ -37,7 +37,29 @@ dat <- dat %>%
   mutate(
     postretrofit_energy = postretrofit_electricalconsump * 0.0036 + postretrofit_naturalgasconsum * 0.0373,
     preretrofit_energy = preretrofit_electicalconsumpti * 0.0036 + preretrofit_naturalgasconsum * 0.0373
+  ) %>%
+  # express all in GJ per year
+  mutate(
+    actual_gas_gj_per_yr = gas * 1.0551 * 12,
+    actual_elec_gj_per_yr = elec / 277.778 * 12,
+    actual_energy_gj_per_yr = energy * 12,
+    predicted_preretrofit_gas_gj_per_yr = preretrofit_naturalgasconsum * 0.0373,
+    predicted_preretrofit_elec_gj_per_yr = preretrofit_electicalconsumpti * 0.0036,
+    predicted_preretrofit_energy_gj_per_yr = preretrofit_energy,
+    predicted_postretrofit_gas_gj_per_yr = postretrofit_naturalgasconsum * 0.0373,
+    predicted_postretrofit_elec_gj_per_yr = postretrofit_electricalconsump * 0.0036,
+    predicted_postretrofit_energy_gj_per_yr = postretrofit_energy,
   )
+
+# Only keep households with both gas and electricity consumption
+with_energy <- dat %>%
+  group_by(id) %>%
+  summarise(across(c(gas, elec, energy), mean, na.rm=T)) %>%
+  filter(!is.na(gas) & !is.na(elec)) %>%
+  #filter(!is.na(gas) | !is.na(elec)) %>% # Use this to keep houses with either gas or electricity
+  dplyr::select(id)
+
+dat <- inner_join(dat, with_energy)
 
 # Create regression data
 # Define treated and post variables

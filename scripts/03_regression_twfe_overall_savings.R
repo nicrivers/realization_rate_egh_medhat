@@ -63,6 +63,21 @@ st(data = dat %>%
    file = "../output_figures_tables/house_sumtable.tex", out="latex")
 
 # energy consumption characteristics
-st(data = dat %>%
-     select(elec, gas, energy),
+st(data = dat %>% mutate(participant = !is.na(postretrofit_naturalgasconsum)) %>%
+     select(participant, elec, gas, energy), group="participant",
    file = "../output_figures_tables/month_sumtable.tex", out="latex")
+
+# Formatted summary table
+st(data = dat %>%
+     group_by(id) %>%
+     # For non-participants, replace NA with 0
+     mutate(across(contains("done"), ~replace_na(.,0))) %>%
+     summarise(across(c(contains("done"),contains("gj_per_yr")), mean, na.rm=T)) %>%
+     select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+     rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
+     mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr)),
+   group = "participant",
+   file = "../output_figures_tables/both_sumtable.tex",
+   title = "Summary statistics\\label{tab:sumstat}")
+
+

@@ -4,3 +4,9 @@ processed_data/*.dta
 
 # don't upload figures/tables
 #output_figures_tables/
+
+# don't upload temporary tex files
+written/*.aux
+written/*.gz
+written/*.out
+written/*.txt
