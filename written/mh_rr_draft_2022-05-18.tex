@@ -21,7 +21,6 @@
 \usepackage{natbib}
 \usepackage{framed}
 \usepackage{setspace}
-\usepackage[hang,flushmargin]{footmisc} 
 \usepackage{lettrine}
 \usepackage{color, soul}
 \usepackage{tcolorbox}
@@ -54,6 +53,9 @@
 
 \section{Introduction}
 
+\section{Program description}
+Describe the EcoEnergy program that we are evaluating.
+
 \section{Data}
 We obtain program data for the EcoEnergy Homes program and EnergyGuide for Homes as well as energy consumption data.
 
@@ -70,28 +72,40 @@ Summary statistics for the data are provided in Table \ref{tab:sumstat}. The tab
 
 
 
-\section{Empirical approach and results}
+\section{Empirical approach}
+
+\subsection{Panel fixed effects analysis}
+To estimate the overall impact of participation in the energy efficiency retrofit program, we use a panel fixed effects approach and regress the natural logarithm of monthly energy consumption ($log(e_{iym})$) on an indicator ($\text{retrofit}_{iym}$) that takes on a value of 1 if a household has completed an energy efficiency retrofit under the EnerGuide for Houses program, and zero otherwise. Our main specification includes household fixed effects as well as month-of-sample fixed effects (e.g., February-2017), and takes the following form:
+\begin{align}
+	log(e_{iym}) = \beta \text{retrofit}_{iym} + \alpha_i + \gamma_{ym} + \epsilon_{iym},
+\end{align}
+where $i$ indexes households $y$ indexes year, and $m$ indexes month. In all cases, we cluster standard errors on both household as well as month-of-sample.
+
+In this approach, household fixed effects control for time-invariant characteristics of homes in the data set, such as size or orientation, as well as fixed occupant characteristics, such as family size, political orientation, or environmental attitudes. Year-month fixed effects control for time-variant conditions that affect all households equivalently, such as weather (all households are located in the same city, so experience similar weather) or energy prices. The approach is similar to \cite{chuang2022residential}, who evaluate electricity efficiency rebate programs in California, or to \cite{liang2018energy}, who evaluate electricity efficiency programs in Phoenix.\footnote{\cite{chuang2022residential} include house-by-month fixed effects. Using house by month fixed effects does not affect our estimates, as shown in Appendix Table \ref{tab:hm}.}
+
+The coefficient $\hat{\beta}$ that is estimated in the regression analysis is an estimate of the effect of retrofit program participation on energy consumption. The coefficient will identify the true effect of program participation on energy consumption when the so-called ``parallel trends'' assumption holds; that is, when the non-participant households provide a good counterfactual for energy consumption of the participating households had they not undergone the energy efficiency retrofit, conditional on fixed effects. The key potential violation of this assumption occurs because, as in \cite{liang2018energy} and \cite{chuang2022residential} and other similar studies, households self-select into program participation. While we control for time-invariant characteristics that are correlated with participation, such as environmental attitudes, using household fixed effects, there may be house-specific time-varying covariates that determine retrofit program participation, which we cannot observe. For example, households with an old furnace may be more likely to participate in the program, since the value of program participation is likely higher for these households \citep{rivers2016free}. However, these households would have been more likely to replace their furnace anyway, given that it is old. In this case, the estimated $\hat{\beta}$ from the regression will be biased towards larger energy savings than actually occurred \citep{boomhower2014credible}.
+
+\hlc{Think about other potential issues related to identification. Is this infra-marginal issue explained well enough here?}
+
+\subsection{Matched sample analysis}
+
+
+\subsection{Accounting for staggered adoption}
+ 
+
+\section{Results}
+
 
 \subsection{Graphical analysis}
-Figure \ref{fig_agg} illustrates long run trends in electricity and natural gas consumption for treated and non-treated households from before and after participation in the energy-efficiency retrofit program. Prior to the beginning of the retrofit program, electricity and gas exhibited similar (annual) trends. The figure suggests that electricity consumption was relatively unchanged by the retrofits, but that natural gas consumption in treated households fell considerably relative to control households. While the households that chose to participate in retrofits were initially consuming about 5\% more natural gas than non-participant households, after the retrofits they consumed about 3-4\% less natural gas than non-participating households. The change occurred during the retrofit program roll-out (shown in the lower panel of Figure \ref{fig_agg}) and appears to be stable following completion of the roll-out.
+Figure \ref{fig_agg} illustrates long run trends in electricity and natural gas consumption for treated and non-treated households from before and after participation in the energy-efficiency retrofit program. The bottom panel shows that the years 2007 and 2008 were prior to program initiation. The retrofit program began in 2009, and rolled out over the following three years, with all participating households completing retrofits by 2012. Prior to the beginning of the retrofit program (in 2007-08), electricity and gas exhibited similar (annual) trends. Households that would later participate in the retrofit program has higher natural gas consumption and slightly higher electricity consumption than non-participating households. The figure suggests that electricity consumption declined slightly as a result of the retrofits, and that natural gas consumption in treated households fell considerably relative to control households. While the households that chose to participate in retrofits were initially consuming about 5\% more natural gas than non-participant households, after the retrofits they consumed about 3-4\% less natural gas than non-participating households. The change occurred during the retrofit program roll-out (shown in the lower panel of Figure \ref{fig_agg}) and appears to be stable following completion of the roll-out.
 
 \begin{figure}
 	\includegraphics{../output_figures_tables/aggregate_trend_graph}
 	\caption{Long-run trends in electricity and natural gas consumption in treated and untreated households}\label{fig_agg}
 \end{figure}
 
-{\color{red} Not clear to me why the aggregate trends graph suggests a gas savings of about 10\%, but we are estimating more like 20\%.}
+{\color{red} Not clear to me why the aggregate trends graph suggests a gas savings of about 10\%, but we are estimating more like 15\%.}
 
-\subsection{Regression analysis of overall energy savings}
-To estimate the overall impact of participation in the energy efficiency retrofit program, we regress monthly energy consumption on an post $\times$ treatment indicator, and include household and month-of-sample fixed effects.  We consider different estimating samples:
-\begin{itemize}
-	\item An ever-treated sample. In this sample, we only include households that participated in the retrofit program, since these households may be more comparable to one another than non-participants. The roll-out of the program was between 2009 and 2012. We thus drop years 2012 and following. This leaves households that participated in the program in 2012 as our never-treated comparison group of participants.
-	\item All households, before 2012. In this sample, we include both participating and non-participating households. We restrict the sample to exclude years 2012 and after to obtain an estimate over a similar timeframe as the never-treated sample.
-	\item All households. In this sample, we include both participating and non-participating households, and include data up to 2019, which allows us to observe households for up to 11 years following initial treatment.
-\end{itemize}
-In all cases, we cluster standard errors on both household as well as month-of-sample.  The table below shows estimates of total energy (gas plus electricity) savings under each of the different samples.  Column 1 is the ever-treated sample, column 2 is all households before 2012, and column 3 is all households up to 2019.  Using the ever-treated sample, we find that participation in retrofits results in roughly a 10\% reduction in household energy use. When we include the non-treated households, our estimate increases in size, to around 14\%.  The long-run and short-run results with the full set of households are roughly the same, suggesting that energy savings from retrofits persist for 10 years following implementation.
-
-\input{../output_figures_tables/main_energy_regression_diff_samples.tex}
 
 \subsection{Staggered adoption and event studies}
 One potential reason for the difference in results with the ever-treated and never-treated samples is because adoption of the energy efficiency measures is staggered over time. Because of the small control group in the ever-treated sample (only a few households retrofit in 2012, and these form the control group in that sample), a large weight is placed on comparisons between newly-treated and previously-treated households. Many papers suggest that these comparisons are potentially problematic, and can result in bias.  We thus conduct our estimation with alternative estimators from Callaway and Sant'a Anna and from Sun and Abraham.  We show results in the form of an event study plot, Figure \ref{fig_esplot}.
@@ -156,5 +170,17 @@ Finally, we estimate measure specific realization rates by dividing realized by 
 
 \section{Conclusion}
 
+\clearpage
+\bibliographystyle{aer}
+\bibliography{mh_rr}
+\clearpage
+
+\appendix
+\section{Additional results}
+% Number tables with appendix name
+\setcounter{table}{0}
+\renewcommand{\thetable}{\Alph{section}\arabic{table}}
+
+\input{../output_figures_tables/house_month_fe.tex}
 
 \end{document}

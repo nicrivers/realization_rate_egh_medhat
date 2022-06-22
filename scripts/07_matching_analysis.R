@@ -26,20 +26,32 @@ summary(balance_unmatched)
 m.out1 <- matchit(treated ~ gas_shoulder + gas_summer + gas_winter + elec_shoulder + elec_summer + elec_winter, 
                   data=pre_treat, method="nearest", distance="glm")
 
+# Subclassification on a logistic PS with 10 subclasses after discarding controls outside common support of PS
+m.out2 <- matchit(treated ~ gas_shoulder + gas_summer + gas_winter + elec_shoulder + elec_summer + elec_winter,
+                  data=pre_treat, method="subclass", distance="glm",
+                  discard = "control", subclass=10)
+
 # much closer balance
 summary(m.out1, un=FALSE)
+summary(m.out2, un=FALSE)
 
 # see matching
 plot(m.out1, type = "jitter", interactive = FALSE)
 plot(m.out1, type = "qq", interactive = FALSE, which.xs = c("gas_winter", "elec_summer"))
 
 # Now we can estimate treatment effect on this matched sample
-match_data <- match.data(m.out1) %>%
+match_data1 <- match.data(m.out1) %>%
   dplyr::select(id, weights) %>%
   inner_join(rd)
 
-m1_all_gas_match <- feols(log(gas) ~ treated_post | id + cons_date, data=match_data, cluster = ~id+cons_date, weights = match_data$weights)
-m1_all_elec_match <- feols(log(elec) ~ treated_post | id + cons_date , data=match_data, cluster = ~id+cons_date, weights = match_data$weights)
-etable(m1_all_gas_match, m1_all_elec_match)
+match_data2 <- match.data(m.out2) %>%
+  dplyr::select(id, weights) %>%
+  inner_join(rd)
 
-etable(m1_all_gas_match, m1_all_elec_match,  tex=TRUE, file="../output_figures_tables/did_matching_results.tex")
+m1_all_energy_nomatch <- feols(log(energy) ~ treated_post | id + cons_date, data=rd, cluster = ~id+cons_date)
+m1_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data1, cluster = ~id+cons_date, weights = match_data1$weights)
+m2_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data2, cluster = ~id+cons_date, weights = match_data2$weights)
+etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match)
+
+
+etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match,  tex=TRUE, file="../output_figures_tables/did_matching_results.tex")

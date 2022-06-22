@@ -18,3 +18,23 @@
 \end{tabular}
 
 
+
+\begin{tabular}{lccc}
+   \tabularnewline\midrule\midrule
+   Dependent Variable: & \multicolumn{3}{c}{log(energy)}\\
+   Model:             & (1)             & (2)             & (3)\\
+   \midrule \emph{Variables} &   &   &  \\
+   treated\_postTRUE & -0.1376$^{***}$ & -0.1232$^{***}$ & -0.1227$^{***}$\\
+                      & (0.0065)        & (0.0067)        & (0.0058)\\
+   \midrule \emph{Fixed-effects} &   &   &  \\
+   id                 & Yes             & Yes             & Yes\\
+   cons\_date        & Yes             & Yes             & Yes\\
+   \midrule \emph{Fit statistics} &   &   &  \\
+   Observations       & 3,172,442       & 460,020         & 2,911,926\\
+   R$^2$              & 0.78444         & 0.80658         & 0.79365\\
+   Within R$^2$       & 0.00208         & 0.00821         & 0.00186\\
+   \midrule\midrule\multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+
+

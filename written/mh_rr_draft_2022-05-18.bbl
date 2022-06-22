@@ -1,0 +1,31 @@
+\ifx\undefined\bysame
+\newcommand{\bysame}{\leavevmode\hbox to\leftmargin{\hrulefill\,\,}}
+\fi
+\begin{thebibliography}{xx}
+
+\harvarditem[Boomhower and Davis]{Boomhower and
+  Davis}{2014}{boomhower2014credible}
+{\bf Boomhower, Judson and Lucas~W Davis}, ``A credible approach for measuring
+  inframarginal participation in energy efficiency programs,'' {\it Journal of
+  Public Economics}, 2014, {\it 113}, 67--79.
+
+\harvarditem[Chuang et al.]{Chuang, Delmas and
+  Pincetl}{2022}{chuang2022residential}
+{\bf Chuang, Yating, Magali~A Delmas, and Stephanie Pincetl}, ``Are Residential
+  Energy Efficiency Upgrades Effective? An Empirical Analysis in Southern
+  California,'' {\it Journal of the Association of Environmental and Resource
+  Economists}, 2022, {\it 9} (4), 641--679.
+
+\harvarditem[Liang et al.]{Liang, Qiu, James, Ruddell, Dalrymple, Earl and
+  Castelazo}{2018}{liang2018energy}
+{\bf Liang, Jing, Yueming Qiu, Timothy James, Benjamin~L Ruddell, Michael
+  Dalrymple, Stevan Earl, and Alex Castelazo}, ``Do energy retrofits work?
+  Evidence from commercial and residential buildings in Phoenix,'' {\it Journal
+  of Environmental Economics and Management}, 2018, {\it 92}, 726--743.
+
+\harvarditem[Rivers and Shiell]{Rivers and Shiell}{2016}{rivers2016free}
+{\bf Rivers, Nicholas and Leslie Shiell}, ``Free-riding on energy efficiency
+  subsidies: the case of natural gas furnaces in Canada,'' {\it The Energy
+  Journal}, 2016, {\it 37} (4).
+
+\end{thebibliography}

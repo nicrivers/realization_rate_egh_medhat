@@ -51,6 +51,10 @@ etable(list(m1_ever_treated_energy, m1_w_never_treated_energy, m1_all_energy), t
 # shows that these estimates are likely biased. This is bc we are comparing
 # newly treated households to previously treated households with the ever-treated sample.
 
+## Compare with house-month fixed effects
+m1_all_energy_hm <- feols(log(energy) ~ treated_post | id^consmonth + cons_date , data=rd, cluster = ~id+cons_date)
+etable(m1_all_energy,m1_all_energy_hm, tex=TRUE, file="../output_figures_tables/house_month_fe.tex", title = "Regression with house-month fixed effects\\label{tab:hm}")
+
 ## Summary statistics
 # house characteristics
 st(data = dat %>%
