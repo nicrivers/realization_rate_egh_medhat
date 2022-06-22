@@ -16,13 +16,21 @@ pre_treat <- rd %>%
   pivot_wider(names_from="season", values_from=c("gas","elec")) %>%
   drop_na()
 
+# Load the tax data
+taxdat <- read_csv("../raw_data/tax - ksp.csv") %>%
+  rename(id = umLocationID)
+
+# Merge data
+pre_treat <- inner_join(pre_treat, taxdat)
+
+# Match on pre-treatment energy consumption
 balance_unmatched <- matchit(treated ~ gas_shoulder + gas_summer + gas_winter + elec_shoulder + elec_summer + elec_winter, 
                              data=pre_treat, method=NULL, distance="glm")
 
 summary(balance_unmatched)
 # Treated houses consume more gas
 
-# 1:1 propensity score matching
+# 1:1 propensity score matching without replacement
 m.out1 <- matchit(treated ~ gas_shoulder + gas_summer + gas_winter + elec_shoulder + elec_summer + elec_winter, 
                   data=pre_treat, method="nearest", distance="glm")
 
@@ -31,9 +39,23 @@ m.out2 <- matchit(treated ~ gas_shoulder + gas_summer + gas_winter + elec_should
                   data=pre_treat, method="subclass", distance="glm",
                   discard = "control", subclass=10)
 
+# Matching on building characteristics only
+m.out3 <- matchit(treated ~ Neighbourhood + BuildingSize + log(TotalAssesmentValue) + EffectiveYearBuild + Building_Condition + Building_Type + umLocClass, 
+                  data=pre_treat %>% filter(TotalAssesmentValue > 0), method="nearest", distance="glm")
+
+# Matching on building characteristics and energy consumption
+m.out4 <- matchit(treated ~ log(BuildingSize) + log(TotalAssesmentValue) + EffectiveYearBuild + gas_shoulder + gas_summer + gas_winter + elec_shoulder + elec_summer + elec_winter, 
+                  exact = ~ Neighbourhood + Building_Type + umLocClass + Building_Condition,
+                  data=pre_treat %>% filter(TotalAssesmentValue > 0, BuildingSize > 0), method="nearest", distance="glm")
+
+# Same thing but with subclass analysis
+m.out5 <- matchit(treated ~ Neighbourhood + Building_Type + umLocClass + Building_Condition + log(BuildingSize) + log(TotalAssesmentValue) + EffectiveYearBuild + gas_shoulder + gas_summer + gas_winter + elec_shoulder + elec_summer + elec_winter, 
+                  data=pre_treat %>% filter(TotalAssesmentValue > 0, BuildingSize > 0), method="subclass", distance="glm", discard = "control", subclass = 10)
+
 # much closer balance
 summary(m.out1, un=FALSE)
 summary(m.out2, un=FALSE)
+summary(m.out3, un=FALSE)
 
 # see matching
 plot(m.out1, type = "jitter", interactive = FALSE)
@@ -48,10 +70,25 @@ match_data2 <- match.data(m.out2) %>%
   dplyr::select(id, weights) %>%
   inner_join(rd)
 
+match_data3 <- match.data(m.out3) %>%
+  dplyr::select(id, weights) %>%
+  inner_join(rd)
+
+match_data4 <- match.data(m.out4) %>%
+  dplyr::select(id, weights) %>%
+  inner_join(rd)
+
+match_data5 <- match.data(m.out5) %>%
+  dplyr::select(id, weights) %>%
+  inner_join(rd)
+
 m1_all_energy_nomatch <- feols(log(energy) ~ treated_post | id + cons_date, data=rd, cluster = ~id+cons_date)
 m1_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data1, cluster = ~id+cons_date, weights = match_data1$weights)
 m2_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data2, cluster = ~id+cons_date, weights = match_data2$weights)
-etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match)
+m3_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data3, cluster = ~id+cons_date, weights = match_data3$weights)
+m4_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data4, cluster = ~id+cons_date, weights = match_data4$weights)
+m5_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data5, cluster = ~id+cons_date, weights = match_data5$weights)
+etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match, m3_all_energy_match, m4_all_energy_match, m5_all_energy_match)
 
 
 etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match,  tex=TRUE, file="../output_figures_tables/did_matching_results.tex")

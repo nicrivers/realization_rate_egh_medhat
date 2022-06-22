@@ -13,6 +13,9 @@ within R, execute the script:
 Execution of the scripts requires the file:
 "processed_data/Final_merge_step_2_control_group_anonymous.dta"
 
+For the matching analysis, the following file is also required:
+"raw_data/tax data - ksp.csv"
+
 Execution of this package requires:
 - R, version 4 or above
 - a tex distribution
