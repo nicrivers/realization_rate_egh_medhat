@@ -62,6 +62,13 @@ with_energy <- dat %>%
 
 dat <- inner_join(dat, with_energy)
 
+# Load the tax data
+taxdat <- read_csv("../raw_data/tax - ksp.csv") %>%
+  rename(id = umLocationID)
+
+# Merge with data
+dat <- left_join(dat, taxdat)
+
 # Create regression data
 # Define treated and post variables
 rd <- dat %>%

@@ -55,6 +55,10 @@ etable(list(m1_ever_treated_energy, m1_w_never_treated_energy, m1_all_energy), t
 m1_all_energy_hm <- feols(log(energy) ~ treated_post | id^consmonth + cons_date , data=rd, cluster = ~id+cons_date)
 etable(m1_all_energy,m1_all_energy_hm, tex=TRUE, file="../output_figures_tables/house_month_fe.tex", title = "Regression with house-month fixed effects\\label{tab:hm}")
 
+## Output for paper
+etable(list(m1_all_gas, m1_all_elec, m1_all_energy), tex=TRUE, file="../output_figures_tables/main_twfe_regression.tex", title = "Main panel regression\\label{tab:maintwfe}")
+
+
 ## Summary statistics
 # house characteristics
 st(data = dat %>%
@@ -76,7 +80,7 @@ st(data = dat %>%
      group_by(id) %>%
      # For non-participants, replace NA with 0
      mutate(across(contains("done"), ~replace_na(.,0))) %>%
-     summarise(across(c(contains("done"),contains("gj_per_yr")), mean, na.rm=T)) %>%
+     summarise(across(c(contains("done"),contains("gj_per_yr"), contains("value"), contains("size"), contains("yearbuild")), mean, na.rm=T)) %>%
      select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
      rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
      mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr)),

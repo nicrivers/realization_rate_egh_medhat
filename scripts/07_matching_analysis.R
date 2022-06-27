@@ -16,10 +16,6 @@ pre_treat <- rd %>%
   pivot_wider(names_from="season", values_from=c("gas","elec")) %>%
   drop_na()
 
-# Load the tax data
-taxdat <- read_csv("../raw_data/tax - ksp.csv") %>%
-  rename(id = umLocationID)
-
 # Merge data
 pre_treat <- inner_join(pre_treat, taxdat)
 
@@ -91,4 +87,4 @@ m5_all_energy_match <- feols(log(energy) ~ treated_post | id + cons_date, data=m
 etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match, m3_all_energy_match, m4_all_energy_match, m5_all_energy_match)
 
 
-etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match,  tex=TRUE, file="../output_figures_tables/did_matching_results.tex")
+etable(m1_all_energy_nomatch, m1_all_energy_match, m3_all_energy_match, m4_all_energy_match,  tex=TRUE, file="../output_figures_tables/did_matching_results.tex", title = "Panel data analysis with matching\\label{tab:didmatch}", replace = TRUE)

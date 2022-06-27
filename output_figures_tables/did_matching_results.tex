@@ -1,40 +1,24 @@
 
-\begin{tabular}{lcc}
-   \tabularnewline\midrule\midrule
-   Dependent Variables: & log(gas)        & log(elec)\\
-   Model:               & (1)             & (2)\\
-   \midrule \emph{Variables} &   &  \\
-   treated\_postTRUE   & -0.1654$^{***}$ & -0.0031\\
-                        & (0.0071)        & (0.0113)\\
-   \midrule \emph{Fixed-effects} &   &  \\
-   id                   & Yes             & Yes\\
-   cons\_date          & Yes             & Yes\\
-   \midrule \emph{Fit statistics} &   &  \\
-   Observations         & 459,170         & 463,099\\
-   R$^2$                & 0.85471         & 0.49565\\
-   Within R$^2$         & 0.01112         & $3.22\times 10^{-6}$\\
-   \midrule\midrule\multicolumn{3}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
-   \multicolumn{3}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
-\end{tabular}
-
-
-
-\begin{tabular}{lccc}
-   \tabularnewline\midrule\midrule
-   Dependent Variable: & \multicolumn{3}{c}{log(energy)}\\
-   Model:             & (1)             & (2)             & (3)\\
-   \midrule \emph{Variables} &   &   &  \\
-   treated\_postTRUE & -0.1376$^{***}$ & -0.1232$^{***}$ & -0.1227$^{***}$\\
-                      & (0.0065)        & (0.0067)        & (0.0058)\\
-   \midrule \emph{Fixed-effects} &   &   &  \\
-   id                 & Yes             & Yes             & Yes\\
-   cons\_date        & Yes             & Yes             & Yes\\
-   \midrule \emph{Fit statistics} &   &   &  \\
-   Observations       & 3,172,442       & 460,020         & 2,911,926\\
-   R$^2$              & 0.78444         & 0.80658         & 0.79365\\
-   Within R$^2$       & 0.00208         & 0.00821         & 0.00186\\
-   \midrule\midrule\multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
-   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
-\end{tabular}
+\begin{table}[htbp]
+   \centering
+   \caption{Panel data analysis with matching\label{tab:didmatch}}
+   \begin{tabular}{lcccc}
+      \tabularnewline\midrule\midrule
+      Dependent Variable: & \multicolumn{4}{c}{log(energy)}\\
+      Model:             & (1)             & (2)             & (3)             & (4)\\
+      \midrule \emph{Variables} &   &   &   &  \\
+      treated\_postTRUE & -0.1376$^{***}$ & -0.1264$^{***}$ & -0.1285$^{***}$ & -0.1238$^{***}$\\
+                         & (0.0065)        & (0.0069)        & (0.0071)        & (0.0068)\\
+      \midrule \emph{Fixed-effects} &   &   &   &  \\
+      id                 & Yes             & Yes             & Yes             & Yes\\
+      cons\_date        & Yes             & Yes             & Yes             & Yes\\
+      \midrule \emph{Fit statistics} &   &   &   &  \\
+      Observations       & 3,172,442       & 452,464         & 453,094         & 448,518\\
+      R$^2$              & 0.78444         & 0.80537         & 0.80832         & 0.80819\\
+      Within R$^2$       & 0.00208         & 0.00850         & 0.00901         & 0.00837\\
+      \midrule\midrule\multicolumn{5}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+      \multicolumn{5}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \end{tabular}
+\end{table}
 
 
