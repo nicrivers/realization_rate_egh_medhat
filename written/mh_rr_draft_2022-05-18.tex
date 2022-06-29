@@ -54,14 +54,14 @@
 \section{Introduction}
 
 \section{Program description}
-This paper evaluates the EcoEnergy Retrofit Homes (EERH) program, which was announced in 2007 and operated from 2008 until 2011. EERH was initially expected to be a \$300 million program \citep{budget2007}, but was expanded by \$300 million in 2009 as a result of unexpectedly high demand and to stimulate residential construction in the face of the 2008-09 financial crisis \citep{budget2009}. It ran until March 2011, when its budget was exhausted.
+This paper evaluates the EcoEnergy Retrofit Homes (EERH) program, which was announced in 2007 and operated from 2008 until 2011. EERH was initially expected to be a \$300 million program \citep{budget2007}, but was expanded by \$300 million in 2009 as a result of unexpectedly high demand and to stimulate residential construction in the face of the 2008-09 financial crisis \citep{budget2009}.\footnote{During part of this period, households were also eligible to apply for the Home Renovation Tax Credit, and some provinces offered home retrofit incentives that piggy-backed on the federal program \citep{rivers2016free}.} It ran until March 2011, when its budget was exhausted.
 
 EERH is one iteration in a line of similar residential retrofit programs in Canada. In 2003, the federal government launched the \$73 million EnerGuide for Houses Retrofit Incentive, as part of the 2002 Climate Change Plan for Canada \citep{canada2002climateplan}.\footnote{See \url{https://www.canada.ca/en/news/archive/2003/10/energuide-houses-retrofit-incentive-launched.html}.} This program was eliminated upon the change of federal government in 2006 and later replaced with the EcoEnergy Retrofit Homes program, which is the subject of this paper. In 2021, government launched the Greener Homes program, which has a budget of \$2.6 billion and is expected to run until 2028.
 
-While some details associated with the different iterations differ from one another, the programs largely follow the same model. In each case, to qualify for a grant, a homeowner is required to complete a pre-retrofit audit by a qualified auditor. Audits consist of a detailed home inventory, which measures home dimensions, aspect, windows and doors, and equipment, as well as a blower door test, which measures air leakage rates. Information from the audit is input into building simulation software developed by Natural Resources Canada called HOT2000\footnote{The software is available here: \url{https://www.nrcan.gc.ca/energy-efficiency/homes/professional-opportunities/tools-industry-professionals/20596}.}, which estimates building energy consumption. Based on the results of the pre-retrofit audit, households are provided with a list of grant-qualifying retrofits, which have changed in the different version of the program. In the EERH program under review, grants were available for heating and cooling system upgrades (e.g., purchasing a more efficient natural gas furnace), building envelope upgrades (e.g., adding wall insulation, adding attic insulation, basement insulation), air sealing, and door/window upgrades \citep{canada2009granttable}. While grants were offered for different upgrades in different iterations of the program, in each case, the total grant for an individual household was limited to \$5,000 (although most households receive less than \$5,000). Households decide which upgrades to make to their home based on the audit report, and undertake the upgrades. Within 18 months of the pre-retrofit audit, to qualify for the grant, households are required to undertake a post-retrofit audit, to confirm upgrades.
+While some details associated with the different iterations differ from one another, the programs largely follow the same model. In each case, to qualify for a grant, a homeowner is required to complete a pre-retrofit audit by a qualified auditor. Audits consist of a detailed home inventory, which measures home dimensions, orientation, windows and doors, and equipment, as well as a blower door test, which measures air leakage rates. Information from the audit is input into building simulation software developed by Natural Resources Canada called HOT2000\footnote{The software is available here: \url{https://www.nrcan.gc.ca/energy-efficiency/homes/professional-opportunities/tools-industry-professionals/20596}.}, which estimates building energy consumption. Based on the results of the pre-retrofit audit, households are provided with a list of grant-qualifying retrofit options, which have changed in the different version of the program. In the EERH program under review, grants were available for heating and cooling system upgrades (e.g., purchasing a more efficient natural gas furnace), building envelope upgrades (e.g., adding wall insulation, adding attic insulation, basement insulation), air sealing, and door/window upgrades \citep{canada2009granttable}. While grants were offered for different upgrades in different iterations of the program, in each case, the total grant for an individual household was limited to \$5,000 (although most households receive less than \$5,000). Households decide which upgrades to make to their home based on the audit report, and undertake the upgrades. Within 18 months of the pre-retrofit audit, to qualify for the grant, households are required to undertake a post-retrofit audit, to confirm upgrades.
 
 
-\section{Data}
+\section{Data}\label{sec:dat}
 We use data from three sources to conduct the analysis. First, we use program data for the EcoEnergy Homes program as well as energy assessment data from EnergyGuide for Homes. Second, we use energy billing data. Third, we use municipal tax assessment data.
 
 The program data is provided by Natural Resources Canada. The data includes all households in Medicine Hat that obtained an energy efficiency audit through the EnerGuide for Homes program. The EnerGuide for homes program is designed to provide a detailed assessment of a home's current energy consumption and to model impacts of energy upgrades on potential energy consumption. Homes go through an in-person audit by an energy efficiency auditor, which includes a physical assessment of the home as well as a blower-door test. Our data includes home measurements and modeled energy consumption.
@@ -88,15 +88,28 @@ To estimate the overall impact of participation in the energy efficiency retrofi
 \end{align}
 where $i$ indexes households $y$ indexes year, and $m$ indexes month. In all cases, we cluster standard errors on both household as well as month-of-sample.
 
-In this approach, household fixed effects control for time-invariant characteristics of homes in the data set, such as size or orientation, as well as fixed occupant characteristics, such as family size, political orientation, or environmental attitudes. Year-month fixed effects control for time-variant conditions that affect all households equivalently, such as weather (all households are located in the same city, so experience similar weather) or energy prices. The approach is similar to \cite{chuang2022residential}, who evaluate electricity efficiency rebate programs in California, or to \cite{liang2018energy}, who evaluate electricity efficiency programs in Phoenix.\footnote{\cite{chuang2022residential} include house-by-month fixed effects. Using house by month fixed effects does not affect our estimates, as shown in Appendix Table \ref{tab:hm}.}
+In this approach, household fixed effects control for time-invariant characteristics of homes in the data set, such as size or orientation, as well as fixed occupant characteristics, such as family size, political orientation, or environmental attitudes. Year-month fixed effects control for time-variant conditions that affect all households equivalently, such as weather (all households are located in the same city, so experience similar weather) or energy prices. The approach is similar to \cite{chuang2022residential}, who evaluate electricity efficiency rebate programs in California, or to \cite{liang2018energy}, who evaluate electricity efficiency programs in Phoenix It is also similar to the quasi-experimental estimates in \cite{fowlie2018energy}, who evaluate a low-income home retrofit program in Michigan.\footnote{\cite{chuang2022residential} and \cite{fowlie2018energy} include house-by-month fixed effects. Using house by month fixed effects does not affect our estimates, as shown in Appendix Table \ref{tab:hm}.}
 
 The coefficient $\hat{\beta}$ that is estimated in the regression analysis is an estimate of the effect of retrofit program participation on energy consumption. The coefficient will identify the true effect of program participation on energy consumption when the so-called ``parallel trends'' assumption holds; that is, when the non-participant households provide a good counterfactual for energy consumption of the participating households had they not undergone the energy efficiency retrofit, conditional on fixed effects. The key potential violation of this assumption occurs because, as in \cite{liang2018energy} and \cite{chuang2022residential} and other similar studies, households self-select into program participation. While we control for time-invariant characteristics that are correlated with participation, such as environmental attitudes, using household fixed effects, there may be house-specific time-varying covariates that determine retrofit program participation, which we cannot observe. For example, households with an old furnace may be more likely to participate in the program, since the value of program participation is likely higher for these households \citep{rivers2016free}. However, these ``inframarginal'' households would have been more likely to replace their furnace anyway, given that it is old. In this case, the estimated $\hat{\beta}$ from the regression will be biased towards larger energy savings than actually occurred \citep{boomhower2014credible}.
 
+One of the features of the data we use in this study is that we have long-term observations of households following energy efficiency retrofits, allowing us to observe houses for over 10 years following retrofits. This enables us to determine whether the energy savings associated with home energy retrofits are persistent, or if they decay after adoption, relative to the control group. Decay could result from physical degredation of the measures, such as air leaks opening following sealing, or from improvements over time in the control group relative to the treatment group, such as from eventual replacement of a furnace with a more efficient model in the untreated control group. To determine the persistence of energy efficiency retrofits, we use an event study approach, in which we interact the retrofit dummy variable in Equation \eqref{eq:did} with a time-to-treatment variable:
+\begin{align}
+	log(e_{iy}) = \sum\limits_{\substack{h=-5 \\ h\neq -1}}^{h=11}  \beta_h \text{retrofit}_{iym}\bm{1}[y - D_i = h] + \alpha_i + \gamma_{y} + \epsilon_{iy}.
+	\label{eq:es}
+\end{align}
+In the event study specification, we aggregate the energy consumption data annually, and estimate a separate coefficient associated with leads and lags of a retrofit (the index $h$), from up to five years before and 11 years following a retrofit (these are the maximum window we observe in the data). The variable $D_i$ in Equation \eqref{eq:es} is the year of retrofit for household $i$. As is standard, we normalize the estimates by dropping the year prior to retrofit.
+
+
 \hlc{Think about other potential issues related to identification. Is this infra-marginal issue explained well enough here?}
 
-\hlc{measure by measure results? realization rates?}
 
-\hlc{Event study analysis}
+
+In addition to estimating the overall savings from home retrofits, we also use the detailed program data to estimate measure-specific energy savings. The measure-specific estimates are generated in the same manner as the overall retrofit estimates, except we replace the dummy variable for retrofits with separate dummy variables for each type of upgrade. Measures are indexed by $j$ and the complete set of measures in indicated by $\mathbb{J}$:
+\begin{align}
+	log(e_{iym}) = \sum_{j \in \mathbb{J}} \beta_j \text{measure}_{ijym} + \alpha_i + \gamma_{ym} + \epsilon_{iym}.
+	\label{eq:mbm}
+\end{align}
+
 
 \subsection{Matched sample analysis}\label{sec:match}
 
@@ -108,6 +121,20 @@ In each case, we estimate Equation \eqref{eq:did} using the samples of control a
 
 \subsection{Accounting for staggered adoption}
  
+\subsection{Realization rates}
+We use data on predicted energy consumption before and after rebates, along with actual energy consumption, to measure \textit{realization rates}. The realization rate is the proportion of projected savings that are realized following a retrofit. We estimate realization rates by estimating:
+\begin{align}
+	\log(e_{iym}) = \beta \text{retrofit}_{iym} \left(\log(\hat{e}^1_i) - \log(\hat{e}^0_i) \right) + \alpha_i + \gamma_{ym} + \epsilon_{iym},
+	\label{eq:rr}
+\end{align} 
+where $\hat{e}^1_i$ and $\hat{e}^0_i$ are predicted post- and pre-retrofit energy consumption from the HOT2000 engineering model, as described in Section \ref{sec:dat}. The coefficient $\beta$ that is recovered from estimating Equation \eqref{eq:rr} is the proportion of predicted energy savings that are realized.
+
+We also aim to estimate measure-specific realization rates. This is complicated because the data records only the predicted energy consumption following all retrofits that were undertaken by the home, and does not provide predictions of energy savings following individual measures. We thus first estimate measure-specific projections of energy savings, using a regression of projected energy savings on the adopted energy efficiency measures:
+\begin{align}
+	\left(\log(\hat{e}^1_i) - \log(\hat{e}^0_i) \right) = \sum_{j \in \mathbb{J}}\tau_j measure_{ij} + \epsilon_{ij}.
+\end{align}
+This is a cross-sectional regression that compares predicted energy savings associated with measure $j$ across houses $i$. $\tau_j$ is an estimate of the predicted savings associated with the adoption of measure $j$. With an estimate of predicted savings associated with adoption of measure $j$ in hand, we compute realization rates by comparing $\beta_j$, estimated from Equation \eqref{eq:mbm}, with $\tau_j$: $\text{realization rate}_j=\beta_j / \tau_j$.
+
 
 \section{Results}
 
@@ -148,9 +175,7 @@ The results suggest that the TWFE estimates including the never treated househol
 
 \subsubsection{Which energy efficiency measures are adopted?}
 To estimate projected savings associated with different energy efficiency retrofits, we regress projected energy savings on a vector of dummy variables that indicate whether a measure was implemented:
-\begin{align}
-	\log y^1_i - \log y^0_i = \sum_j \beta_j x_{ij}.
-\end{align}
+
 In the equation, $y^1_i$ is the projected energy consumption of house $i$ after a retrofit is undertaken and $y^0_i$ is projected energy consumption before the retrofit is undertaken. $x_{ij}$ is a dummy variable indicating whether house $i$ implemented retrofit $j$.
 
 Before presenting the results, Figure \ref{fig_corplot} shows a correlation plot of energy efficiency measures. If adoption of measures is highly correlated, it may be difficult to precisely estimate energy savings.  Figure \ref{fig_corplot} shows that for the most part, there is limited correlation between measures.  Only basement insulation and foundation headers are highly correlated.  It may make sense to aggregate these two measures (I haven't done this).

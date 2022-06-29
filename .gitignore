@@ -11,3 +11,5 @@ written/*.gz
 written/*.out
 written/*.txt
 written/*.log
+written/*.bbl
+written/*.blg

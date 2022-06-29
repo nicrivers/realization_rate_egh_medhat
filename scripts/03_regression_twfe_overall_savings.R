@@ -88,4 +88,51 @@ st(data = dat %>%
    file = "../output_figures_tables/both_sumtable.tex",out="latex",
    title = "Summary statistics\\label{tab:sumstat}")
 
+# Try a better-formatted table using gtsummary
+### by defaul, tbl_summary produces median and IQR
+tbl_summary(dat %>%
+     group_by(id) %>%
+     # For non-participants, replace NA with 0
+     mutate(across(contains("done"), ~replace_na(.,0))) %>%
+     summarise(across(c(contains("done"),contains("gj_per_yr"), contains("value"), contains("size"), contains("yearbuild")), mean, na.rm=T)) %>%
+     select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+     rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
+     mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr)),
+   by = "participant")
 
+# This is nice, but full support for LaTeX is still not available for gt objects
+
+sum_dat <- dat %>%
+  group_by(id) %>%
+  # For non-participants, replace NA with 0
+  mutate(across(contains("done"), ~replace_na(.,0))) %>%
+  summarise(across(c(contains("done"),contains("gj_per_yr"), contains("value"), contains("size"), contains("yearbuild")), mean, na.rm=T)) %>%
+  select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+  rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
+  mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr))
+
+t1 <- tbl_summary(sum_dat %>% 
+                    dplyr::select(contains("actual"), participant),
+                  by="participant") %>%
+  add_p()
+
+t2 <- tbl_summary(sum_dat %>% 
+                    dplyr::select(air_sealing, ceiling_insulation, walls_insulation, bsmt_insulation, fnd_header, windowsand_doors, central_ac, natural_gas_furnace, participant),
+                  by="participant")
+
+t3 <- tbl_summary(sum_dat %>% 
+                    dplyr::select(TotalAssesmentValue, LotSize, BuildingSize, EffectiveYearBuild, participant),
+                  by="participant") %>%
+  add_p()
+
+t4 <- tbl_summary(sum_dat %>% 
+                    dplyr::select(contains("predicted"), participant),
+                  by="participant") 
+
+
+#tbl_stack(list(t1,t4,t2,t3),
+#                         "Predicted energy consumption",
+#                           "Retrofits undertaken",
+#                           "Tax assessment data")) %>%
+#  modify_footnote(all_stat_cols() ~ "median (IQR) for actual and predicted energy and tax data; n (%) for retrofit measures") %>%
+#  as_gt() %>% gt::gtsave("../output_figures_tables/both_sumtable.tex")

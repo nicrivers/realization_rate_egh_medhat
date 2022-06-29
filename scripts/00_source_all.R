@@ -12,6 +12,7 @@ library(broom)
 library(corrplot)
 library(vtable)
 library(MatchIt)
+library(gtsummary)
 
 source(here::here("scripts", "01_read_processed_data.R"))
 source(here::here("scripts", "02_graphical_analysis.R"))
