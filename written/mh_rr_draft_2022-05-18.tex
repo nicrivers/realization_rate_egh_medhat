@@ -54,7 +54,7 @@
 \section{Introduction}
 
 \section{Program description}
-This paper evaluates the EcoEnergy Retrofit Homes (EERH) program, which was announced in 2007 and operated from 2008 until 2011. EERH was initially expected to be a \$300 million program \citep{budget2007}, but was expanded by \$300 million in 2009 as a result of unexpectedly high demand and to stimulate residential construction in the face of the 2008-09 financial crisis \citep{budget2009}.\footnote{During part of this period, households were also eligible to apply for the Home Renovation Tax Credit, and some provinces offered home retrofit incentives that piggy-backed on the federal program \citep{rivers2016free}.} It ran until March 2011, when its budget was exhausted.
+This paper evaluates the EcoEnergy Retrofit Homes (EERH) program, which was announced in 2007 and operated from 2007 until 2011. EERH was initially expected to be a \$300 million program \citep{budget2007}, but was expanded by \$300 million in 2009 as a result of unexpectedly high demand and to stimulate residential construction in the face of the 2008-09 financial crisis \citep{budget2009}.\footnote{During part of this period, households were also eligible to apply for the Home Renovation Tax Credit, and some provinces offered home retrofit incentives that piggy-backed on the federal program \citep{rivers2016free}.} It ran until March 2011, when its budget was exhausted.
 
 EERH is one iteration in a line of similar residential retrofit programs in Canada. In 2003, the federal government launched the \$73 million EnerGuide for Houses Retrofit Incentive, as part of the 2002 Climate Change Plan for Canada \citep{canada2002climateplan}.\footnote{See \url{https://www.canada.ca/en/news/archive/2003/10/energuide-houses-retrofit-incentive-launched.html}.} This program was eliminated upon the change of federal government in 2006 and later replaced with the EcoEnergy Retrofit Homes program, which is the subject of this paper. In 2021, government launched the Greener Homes program, which has a budget of \$2.6 billion and is expected to run until 2028.
 
@@ -69,6 +69,8 @@ The program data is provided by Natural Resources Canada. The data includes all 
 The program data also includes a record of energy efficiency upgrades that were performed by the household in response to the energy efficiency assessment. In addition, the program data includes a prospective assessment of ex ante expectations of energy savings associated with the suite of upgrades that were undertaken by the homeowner.
 
 The energy consumption data was provided by the City of Medicine Hat, and includes monthly billing data for natural gas and electricity for all homes in the municipality from 2007 to 2019.  The energy consumption data was merged with the program participation data based on address matching.
+
+\hlc{Should explain how I drop the period between the initial audit and the post-retrofit audit. Make sure I'm doing that properly in the data as well. Should also explain that I drop households without energy consumption, and should explain how successful the matching was (how many observations were dropped because we could not address match).}
 
 The tax assessment data was provided by the City of Medicine Hat, and includes information on the building type, size, and vintage as well as information on which neighbourhood the building is located in and an assessment of the building's value. The tax assessment data was merged with the program participation data based on address matching.
 
@@ -109,7 +111,7 @@ In addition to estimating the overall savings from home retrofits, we also use t
 	log(e_{iym}) = \sum_{j \in \mathbb{J}} \beta_j \text{measure}_{ijym} + \alpha_i + \gamma_{ym} + \epsilon_{iym}.
 	\label{eq:mbm}
 \end{align}
-
+While this approach to estimating energy savings from specific energy efficiency measures is standard \citep[e.g., ][]{chuang2022residential,liang2018energy}, it is important to note that it treats energy savings from individual measures as additive, and ignores potential interactions between measures. Given our relatively small sample, running a specification that allows flexibly for interacting effects between measures is not possible.
 
 \subsection{Matched sample analysis}\label{sec:match}
 
@@ -121,7 +123,9 @@ In each case, we estimate Equation \eqref{eq:did} using the samples of control a
 
 \subsection{Accounting for staggered adoption}
  
-\subsection{Realization rates}
+\hlc{write this section}
+ 
+\subsection{Realization rates}\label{sec:rr_method}
 We use data on predicted energy consumption before and after rebates, along with actual energy consumption, to measure \textit{realization rates}. The realization rate is the proportion of projected savings that are realized following a retrofit. We estimate realization rates by estimating:
 \begin{align}
 	\log(e_{iym}) = \beta \text{retrofit}_{iym} \left(\log(\hat{e}^1_i) - \log(\hat{e}^0_i) \right) + \alpha_i + \gamma_{ym} + \epsilon_{iym},
@@ -132,6 +136,7 @@ where $\hat{e}^1_i$ and $\hat{e}^0_i$ are predicted post- and pre-retrofit energ
 We also aim to estimate measure-specific realization rates. This is complicated because the data records only the predicted energy consumption following all retrofits that were undertaken by the home, and does not provide predictions of energy savings following individual measures. We thus first estimate measure-specific projections of energy savings, using a regression of projected energy savings on the adopted energy efficiency measures:
 \begin{align}
 	\left(\log(\hat{e}^1_i) - \log(\hat{e}^0_i) \right) = \sum_{j \in \mathbb{J}}\tau_j measure_{ij} + \epsilon_{ij}.
+	\label{eq:proj_mbm}
 \end{align}
 This is a cross-sectional regression that compares predicted energy savings associated with measure $j$ across houses $i$. $\tau_j$ is an estimate of the predicted savings associated with the adoption of measure $j$. With an estimate of predicted savings associated with adoption of measure $j$ in hand, we compute realization rates by comparing $\beta_j$, estimated from Equation \eqref{eq:mbm}, with $\tau_j$: $\text{realization rate}_j=\beta_j / \tau_j$.
 
@@ -153,10 +158,19 @@ Table \ref{tab:maintwfe} shows estimates of $\hat{\beta}$ from estimating Equati
 
 \input{../output_figures_tables/main_twfe_regression}
 
+In Figure \ref{fig:did_mbm}, we present results from estimating Equation \eqref{eq:mbm} separately for gas, electricity, and total energy consumption.  In the right panel, we show the number of energy efficiency measures adopted in the data set, and highlight that the most popular measures were air sealing, upgrading a natural gas furnace with a more efficient model, and adding ceiling/attic insulation.  In the left panel, we show coefficient estimates and standard errors associated with each measure for each fuel type.  Natural gas furnace upgrades are estimated to result in the largest natural gas savings, at around 17\%. The furnace typically consumes the largest amount of natural gas in a house, and at the time upgrades could furnace efficiency by as much as 20\% (the EERH program required a new furnace efficiency of at least 92\% to qualify for rebates, while older furnaces typically were 60 to 80\% efficient.) Wall insulation is also estimated to significantly reduce natural gas consumption, although estimates are much less precise than for natural gas furnaces because few houses undertook this measure (which is much more intrusive than a furnace upgrade). Attic insulation and air sealing are also estimated to reduce natural gas consumption, by 6\% and 3\%, respectively. Other measures, such as window and door upgrades and basement insulation, are found to have no impact on natural gas consumption. This finding is similar to other studies, which suggest that window and door upgrades are ineffective at reducing energy consumption \citep{giandomenico2020systematic}.  For electricity, we find no measures that substantially reduce consumption on average. We do find a statistically significant reduction in electricity consumption associated with air sealing, but the measure only results in savings of about 4\%. Our estimates suggest that wall insulation \textit{increases} electricity demand, although again the estimate is fairly imprecise. Other energy efficiency measures are not associated with a statistically significant change in electricity consumption.
+
+
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{../output_figures_tables/mbm_energy_savings_combined.png}
+	\caption{Estimated energy savings}\label{fig:did_mbm}
+\end{figure}
+
 \subsection{Matching analysis}
 Table \ref{tab:didmatch} reports estimates of $\hat{\beta}$ from estimating Equation \eqref{eq:did} while restricting observations to treated and matched control units. The table reports results for total energy consumption. In column (1), the table replicates the estimation reported in Table \ref{tab:maintwfe}, in which all treated and control observations are included. As above, estimating this model suggests that participation in the retrofit program caused a reduction in energy consumption of 13.8\%. In column (2), the sample is restricted to include treated households and control units that are matched on pre-treatment energy consumption, as described in Section \ref{sec:match}. The estimate of $\hat{\beta}$ falls by about one percentage point to 12.6\%. The estimate in column (3) is based on matching treated households with control households based on building characteristics. Again, the estimated $\hat{\beta}$ is smaller than in the unmatched analysis, suggesting some infra-marginal households participating in the retrofit program. Finally, in column (4), we match on both building characteristics and pre-treatment energy consumption. The point estimate suggests that participation in the retrofit program reduced energy consumption by 12.4\%. 
 
-Two facts are notable from the matching analysis.  First, estimates of $\hat{\beta}$ using a control group that is matched-on-observables with the treated group result in smaller estimates of energy savings compared to analysis using the full group of untreated observations. This suggests that some of the households that participated in the retrofit program are likely infra-marginal, and would have conducted the retrofit even without the program. By matching control households with treated households, we can to some degree account for this selection into treatment. This results in smaller estimates of the treatment effect. Second, while the treatment effect is smaller using the matched control group, our estimates are qualitatively similar to the unmatched analysis (12.4\% energy savings in the analysis with a matched sample compared to 13.8\% using the full control group). While our matching-on-observables approach is not able to perfectly control for self-selection into participation, this suggests that infra-marginal participation in the retrofit program may not be as large as in other contexts for this program \citep{grosche2009willingness, rivers2016free, boomhower2014credible}. Given that the matching analysis can control in part for selection into treatment, we adopt column (4) of Table \ref{tab:didmatch} as our preferred estimate of the effect of retrofit program participation on energy savings.
+Two facts are notable from the matching analysis.  First, estimates of $\hat{\beta}$ using a control group that is matched-on-observables with the treated group result in smaller estimates of energy savings compared to analysis using the full group of untreated observations. This suggests that some of the households that participated in the retrofit program are likely infra-marginal, and would have conducted the retrofit even without the program. By matching control households with treated households, we can to some degree account for this selection into treatment. This results in smaller estimates of the treatment effect. Second, while the treatment effect is smaller using the matched control group, our estimates are qualitatively similar to the unmatched analysis (12.4\% energy savings in the analysis with a matched sample compared to 13.8\% using the full control group). While our matching-on-observables approach is not able to perfectly control for self-selection into participation, this suggests that infra-marginal participation in the retrofit program may not be as large as in other contexts for this program \citep{grosche2009willingness, boomhower2014credible}. Given that the matching analysis can control in part for selection into treatment, we adopt column (4) of Table \ref{tab:didmatch} as our preferred estimate of the effect of retrofit program participation on energy savings.
 
 \input{../output_figures_tables/did_matching_results}
 
@@ -171,21 +185,23 @@ The results suggest that the TWFE estimates including the never treated househol
 \end{figure}
 
 
-\subsection{Measure specific results}
+\subsection{Realization rates}
 
 \subsubsection{Which energy efficiency measures are adopted?}
-To estimate projected savings associated with different energy efficiency retrofits, we regress projected energy savings on a vector of dummy variables that indicate whether a measure was implemented:
 
-In the equation, $y^1_i$ is the projected energy consumption of house $i$ after a retrofit is undertaken and $y^0_i$ is projected energy consumption before the retrofit is undertaken. $x_{ij}$ is a dummy variable indicating whether house $i$ implemented retrofit $j$.
 
-Before presenting the results, Figure \ref{fig_corplot} shows a correlation plot of energy efficiency measures. If adoption of measures is highly correlated, it may be difficult to precisely estimate energy savings.  Figure \ref{fig_corplot} shows that for the most part, there is limited correlation between measures.  Only basement insulation and foundation headers are highly correlated.  It may make sense to aggregate these two measures (I haven't done this).
 
-\begin{figure}
-	\includegraphics{"../output_figures_tables/correlation_plot.png"}
-	\caption{Correlation plot of retrofit measures}\label{fig_corplot}
-\end{figure}
+\subsubsection{Overall realization rates}
+We estimate an aggregate realization rate by regressing energy consumption on a treatment dummy interacted with projected energy savings, as in Equation \ref{eq:rr}. As shown in the table below, we find a realization rate for natural gas of 50\%. Our realization rate for electricity is negative (we find an increase in electricity consumption, rather than a saving). For all energy, we find a realization rate of 47\%. \hlc{Do I want to use the matched sample? Need to ensure that this is the same regression as in Table 2, where it looks like there is an energy savings in electricity.}
 
-Figure \ref{fig_mbm_proj} shows projections of energy savings by measure. Large savings are projected for natural gas furnace upgrades as well as wall insulation.
+\input{../output_figures_tables/overall_realizationrate_log.tex}
+
+We also conduct our analysis in levels rather than logs. Results are shown in the Appendix (\hlc{Need table number here}), an are similar to the main results in logs.
+
+
+
+\subsubsection{Measure-specific realization rates}
+Estimating measure-specific realization rates occurs in two steps, as described in Section \ref{sec:rr_method}. First, we estimate projected energy savings by measure, using a cross-sectional regression of projected total savings regressed on a vector of dummy variables indicating which measures were adopted, as in Equation \eqref{eq:proj_mbm}. Figure \ref{fig_mbm_proj} plots coefficients recovered from this regression. Large savings in natural gas are projected for natural gas furnace upgrades as well as wall insulation. Basement insulation, ceiling/attic insulation, window and door upgrades, and air sealing are also all projected to deliver natural gas savings by the engineering model. Projected electricity savings are much smaller than natural gas savings, with largest reductions projected for wall insulation as well as natural gas furnace upgrades (because less electrical consumption by the furnace fan).
 
 \begin{figure}
 	\includegraphics{../output_figures_tables/projected_es_mbm.png}
@@ -193,26 +209,7 @@ Figure \ref{fig_mbm_proj} shows projections of energy savings by measure. Large 
 \end{figure}
 
 
-\subsubsection{Estimated savings}
-
-Figure \ref{fig_proj} shows estimated energy savings from different adopted measures (left panel) and the number of measures adopted (right panel). The largest estimated changes in gas consumption are largest for natural gas furnace upgrades and wall insulation. Air sealing and attic (ceiling) insulation also deliver gas savings that are precisely estimated. In contrast, no measure is shown to save electricity, and walls insulation may actually increase electricity consumption (although few houses adopt walls insulation).
-
-\begin{figure}
-	\includegraphics[width=\linewidth]{../output_figures_tables/mbm_energy_savings_combined.png}
-	\caption{Estimated energy savings}\label{fig_proj}
-\end{figure}
-
-
-\subsubsection{Realization rates}
-We estimate an aggregate realization rate by regressing energy consumption on a post $\times$ treatment dummy interacted with projected energy savings. As shown in the table below, we find a realization rate for natural gas of 50\%. Our realization rate for electricity is negative (we find an increase in electricity consumption, rather than a saving). For all energy, we find a realization rate of 47\%.
-
-\input{../output_figures_tables/overall_realizationrate_log.tex}
-
-We also conduct our analysis in levels rather than logs. Results are shown in the table below, an are similar to the main results in logs.
-
-\input{../output_figures_tables/overall_realizationrate_levels.tex}
-
-Finally, we estimate measure specific realization rates by dividing realized by projected energy savings by measure.  Results are presented in Figure \ref{fig_rr_mbm}. We indicate measure-specific realization rates in percentage form above each measure. For natural gas, we find realizatoin rates of 59\% for furnace upgrades and 51\% for walls insulation. We find a realization rate of above 100\% for air sealing measures. For electricity, we find realization rates that are mostly negative, since most measures appear to be associated with an increase in electricity consumption.
+Finally, we estimate measure specific realization rates by dividing realized by projected energy savings by measure.  Results are presented in Figure \ref{fig_rr_mbm}. We indicate measure-specific realization rates in percentage form above each measure. For natural gas, we find realization rates of 59\% for furnace upgrades and 51\% for walls insulation. We find a realization rate of above 100\% for air sealing measures. For electricity, we find realization rates that are mostly negative, since most measures appear to be associated with an increase in electricity consumption.
 
 \begin{figure}
 	\includegraphics[width=\linewidth]{../output_figures_tables/mbm_realization_rate.png}
@@ -233,5 +230,7 @@ Finally, we estimate measure specific realization rates by dividing realized by 
 \renewcommand{\thetable}{\Alph{section}\arabic{table}}
 
 \input{../output_figures_tables/house_month_fe.tex}
+
+\input{../output_figures_tables/overall_realizationrate_levels.tex}
 
 \end{document}
