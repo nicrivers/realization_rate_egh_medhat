@@ -11,9 +11,9 @@ rd_stag <- rd %>%
            consyear >= retrofit_start_year & consyear <= retrofit_end_year ~ -2000
          )) %>%
   group_by(id,consyear,treated,post,treated_post,years_to_treatment,retrofit_start_year, retrofit_end_year) %>%
-  summarise(elec=sum(elec, na.rm=T),
-            gas=sum(gas, na.rm=T),
-            energy=sum(energy, na.rm=T))
+  summarise(elec=mean(elec, na.rm=T),
+            gas=mean(gas, na.rm=T),
+            energy=mean(energy, na.rm=T))
 
 
 res_twfe_onlytreated = feols(log(energy) ~ i(years_to_treatment, ref = c(-1, -1000)) | id + consyear, rd_stag %>% 
@@ -108,3 +108,23 @@ ggplot(all_es_coefs %>% filter(model == "TWFE-incl. never treated"), aes(x=term,
        y="Impact on total energy consumption") +
   scale_y_continuous(labels=scales::percent_format())
 ggsave("../output_figures_tables/event_study_plot_twfe_only.png", width=6, height=4)
+
+# Just plot TWFE and SA models
+ggplot(all_es_coefs %>% filter(model %in% c("TWFE-incl. never treated", "Sun&Abraham")), aes(x=term, y=estimate, colour=model)) +
+  geom_point(position=position_dodge(width=0.5)) +
+  geom_errorbar(position=position_dodge(width=0.5),
+                aes(ymin=estimate-1.96*std.error,
+                    ymax=estimate+1.96*std.error)) +
+  scale_colour_brewer(palette="Set1", name=NULL) +
+  theme_bw() +
+  theme(legend.position = c(0.2,0.2)) +
+  labs(x="Years until treatment",
+       y="Impact on total energy consumption") +
+  scale_y_continuous(labels=scales::percent_format()) +
+  geom_hline(yintercept = 0, linetype="dashed")
+ggsave("../output_figures_tables/event_study_plot_twfe_sa_only.png", width=6, height=4)
+
+# Aggregated
+aggregate(res_sunab, c("ATT" = "consyear::[^-]"))
+
+          

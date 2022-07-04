@@ -4,19 +4,19 @@
    Dependent Variables:                                & log(gas)       & log(elec)             & log(energy)\\
    Model:                                              & (1)            & (2)                   & (3)\\
    \midrule \emph{Variables} &   &   &  \\
-   as.numeric(treated\_post) $\times$ delta\_gas    & 0.5252$^{***}$ &                       &   \\
-                                                       & (0.0211)       &                       &   \\
-   as.numeric(treated\_post) $\times$ delta\_elec   &                & -0.2448               &   \\
-                                                       &                & (0.5091)              &   \\
-   as.numeric(treated\_post) $\times$ delta\_energy &                &                       & 0.4718$^{***}$\\
-                                                       &                &                       & (0.0275)\\
+   as.numeric(treated\_post) $\times$ delta\_gas    & 0.6055$^{***}$ &                       &   \\
+                                                       & (0.0195)       &                       &   \\
+   as.numeric(treated\_post) $\times$ delta\_elec   &                & 0.1226                &   \\
+                                                       &                & (0.5118)              &   \\
+   as.numeric(treated\_post) $\times$ delta\_energy &                &                       & 0.5464$^{***}$\\
+                                                       &                &                       & (0.0276)\\
    \midrule \emph{Fixed-effects} &   &   &  \\
    id                                                  & Yes            & Yes                   & Yes\\
    cons\_date                                         & Yes            & Yes                   & Yes\\
    \midrule \emph{Fit statistics} &   &   &  \\
-   Observations                                        & 3,213,009      & 3,768,273             & 3,169,870\\
-   R$^2$                                               & 0.84839        & 0.54893               & 0.78449\\
-   Within R$^2$                                        & 0.00358        & $1.67\times 10^{-6}$ & 0.00225\\
+   Observations                                        & 3,165,406      & 3,208,330             & 3,176,199\\
+   R$^2$                                               & 0.84913        & 0.47322               & 0.78446\\
+   Within R$^2$                                        & 0.00417        & $4.62\times 10^{-7}$ & 0.00258\\
    \midrule\midrule\multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
    \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
 \end{tabular}

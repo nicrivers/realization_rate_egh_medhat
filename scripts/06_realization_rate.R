@@ -51,7 +51,7 @@ projected_mbm_energy <- feols(log(postretrofit_energy) - log(preretrofit_energy)
                               natural_gas_furnace - 1, data=rd_ps)
 
 etable(projected_mbm_gas, projected_mbm_elec, projected_mbm_energy)
-etable(projected_mbm_gas, projected_mbm_elec, projected_mbm_energy, tex=TRUE, file = "../output_figures_tables/projected_es_mbm.tex")
+etable(projected_mbm_gas, projected_mbm_elec, projected_mbm_energy, tex=TRUE, file = "../output_figures_tables/projected_es_mbm.tex", replace = TRUE)
 
 # Plot projected savings coefficients
 mbm_projected_coefs <- 
@@ -124,7 +124,7 @@ m1_gas_rr <- feols(log(gas) ~ as.numeric(treated_post) : delta_gas  | id + cons_
 m1_elec_rr <- feols(log(elec) ~ as.numeric(treated_post) : delta_elec  | id + cons_date, data=rd_rr_mbm, cluster = ~id+cons_date)
 m1_energy_rr <- feols(log(energy) ~ as.numeric(treated_post) : delta_energy  | id + cons_date, data=rd_rr_mbm, cluster = ~id+cons_date)
 etable(m1_gas_rr, m1_elec_rr, m1_energy_rr)
-etable(m1_gas_rr, m1_elec_rr, m1_energy_rr, tex=TRUE, file="../output_figures_tables/overall_realizationrate_log.tex")
+etable(m1_gas_rr, m1_elec_rr, m1_energy_rr, tex=TRUE, file="../output_figures_tables/overall_realizationrate_log.tex", replace = TRUE)
 
 
 # Re-estimate realization rate in levels rather than logs
@@ -147,7 +147,7 @@ m1_gas_rr_lev <- feols(gas ~ as.numeric(treated_post) : delta_gas_lev  | id + co
 m1_elec_rr_lev <- feols(elec ~ as.numeric(treated_post) : delta_elec_lev  | id + cons_date, data=rd_rr_mbm_levels, cluster = ~id+cons_date)
 m1_energy_rr_lev <- feols(energy ~ as.numeric(treated_post) : delta_energy_lev  | id + cons_date, data=rd_rr_mbm_levels, cluster = ~id+cons_date)
 etable(m1_gas_rr_lev, m1_elec_rr_lev, m1_energy_rr_lev)  
-etable(m1_gas_rr_lev, m1_elec_rr_lev, m1_energy_rr_lev, tex=TRUE, file="../output_figures_tables/overall_realizationrate_levels.tex")
+etable(m1_gas_rr_lev, m1_elec_rr_lev, m1_energy_rr_lev, tex=TRUE, file="../output_figures_tables/overall_realizationrate_levels.tex", replace = TRUE)
 
 
 #####

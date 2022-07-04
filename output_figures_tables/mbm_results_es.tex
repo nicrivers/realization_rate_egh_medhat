@@ -66,3 +66,37 @@
 \end{tabular}
 
 
+
+\begin{tabular}{lccc}
+   \tabularnewline\midrule\midrule
+   Dependent Variables:                                      & log(gas)        & log(elec)      & log(energy)\\
+   Model:                                                    & (1)             & (2)            & (3)\\
+   \midrule \emph{Variables} &   &   &  \\
+   air\_sealing $\times$ treated\_post $=$ TRUE           & -0.0352$^{***}$ & -0.0366$^{*}$  & -0.0319$^{***}$\\
+                                                             & (0.0106)        & (0.0198)       & (0.0105)\\
+   ceiling\_insulation $\times$ treated\_post $=$ TRUE    & -0.0640$^{***}$ & -0.0345$^{**}$ & -0.0576$^{***}$\\
+                                                             & (0.0100)        & (0.0159)       & (0.0093)\\
+   fnd\_header $\times$ treated\_post $=$ TRUE            & -0.0490         & 0.0571         & -0.0469$^{*}$\\
+                                                             & (0.0300)        & (0.0559)       & (0.0280)\\
+   windowsand\_doors $\times$ treated\_post $=$ TRUE      & -0.0158         & 0.0257         & -0.0082\\
+                                                             & (0.0138)        & (0.0248)       & (0.0132)\\
+   central\_ac $\times$ treated\_post $=$ TRUE            & 0.0198          & -0.0349        & 0.0053\\
+                                                             & (0.0152)        & (0.0260)       & (0.0147)\\
+   bsmt\_insulation $\times$ treated\_post $=$ TRUE       & -0.0226         & 0.0672         & -0.0018\\
+                                                             & (0.0255)        & (0.0449)       & (0.0233)\\
+   walls\_insulation $\times$ treated\_post $=$ TRUE      & -0.1613$^{***}$ & 0.1189$^{**}$  & -0.0982$^{***}$\\
+                                                             & (0.0339)        & (0.0566)       & (0.0373)\\
+   natural\_gas\_furnace $\times$ treated\_post $=$ TRUE & -0.1845$^{***}$ & 0.0088         & -0.1218$^{***}$\\
+                                                             & (0.0111)        & (0.0179)       & (0.0104)\\
+   \midrule \emph{Fixed-effects} &   &   &  \\
+   id                                                        & Yes             & Yes            & Yes\\
+   cons\_date                                               & Yes             & Yes            & Yes\\
+   \midrule \emph{Fit statistics} &   &   &  \\
+   Observations                                              & 3,165,406       & 3,208,330      & 3,176,199\\
+   R$^2$                                                     & 0.84914         & 0.47332        & 0.78448\\
+   Within R$^2$                                              & 0.00421         & 0.00019        & 0.00265\\
+   \midrule\midrule\multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+
+

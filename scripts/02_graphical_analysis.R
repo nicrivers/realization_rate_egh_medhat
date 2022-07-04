@@ -1,10 +1,6 @@
 # This file produces summary statistics and motivating graphical analysis
 
-plot_data_aggregate <- dat %>%
-  # Group houses as either treated or not
-  # Group by year
-  mutate(treated = !is.na(postretrofit_entrydate),
-         year = year(cons_date)) %>%
+plot_data_aggregate <- rd %>%
   group_by(year, treated) %>%
   # Remove NA observations
   summarise(elec = mean(elec, na.rm=T),
@@ -16,10 +12,7 @@ plot_data_aggregate <- dat %>%
   group_by(energy_type) %>% 
   mutate(index = log(value)/first(log(value))) 
 
-counts <- dat %>%
-  mutate(treated = !is.na(postretrofit_entrydate),
-         post = (cons_date > postretrofit_entrydate),
-         year = year(cons_date)) %>%
+counts <- rd %>%
   filter(treated==TRUE) %>%
   pivot_longer(cols=c("gas","elec"), names_to="energy_type") %>%
   group_by(year, energy_type, post) %>%

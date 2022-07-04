@@ -9,6 +9,12 @@
   inframarginal participation in energy efficiency programs,'' {\it Journal of
   Public Economics}, 2014, {\it 113}, 67--79.
 
+\harvarditem[Callaway and {Sant'Anna}]{Callaway and
+  {Sant'Anna}}{2021}{callaway2021difference}
+{\bf Callaway, Brantly and Pedro~HC {Sant'Anna}}, ``Difference-in-differences
+  with multiple time periods,'' {\it Journal of Econometrics}, 2021, {\it 225}
+  (2), 200--230.
+
 \harvarditem[Chuang et al.]{Chuang, Delmas and
   Pincetl}{2022}{chuang2022residential}
 {\bf Chuang, Yating, Magali~A Delmas, and Stephanie Pincetl}, ``Are Residential
@@ -39,6 +45,11 @@
   review of energy efficiency home retrofit evaluation studies,'' {\it Annual
   Review of Resource Economics}, 2020, {\it 14.}
 
+\harvarditem[Goodman-Bacon]{Goodman-Bacon}{2021}{goodman2021difference}
+{\bf Goodman-Bacon, Andrew}, ``Difference-in-differences with variation in
+  treatment timing,'' {\it Journal of Econometrics}, 2021, {\it 225} (2),
+  254--277.
+
 \harvarditem[{Government of Canada}]{{Government of
   Canada}}{2002}{canada2002climateplan}
 {\bf {Government of Canada}}, ``Climate change plan for {Canada}: Achieving our
@@ -66,5 +77,10 @@
 {\bf Rivers, Nicholas and Leslie Shiell}, ``Free-riding on energy efficiency
   subsidies: the case of natural gas furnaces in Canada,'' {\it The Energy
   Journal}, 2016, {\it 37} (4).
+
+\harvarditem[Sun and Abraham]{Sun and Abraham}{2021}{sun2021estimating}
+{\bf Sun, Liyang and Sarah Abraham}, ``Estimating dynamic treatment effects in
+  event studies with heterogeneous treatment effects,'' {\it Journal of
+  Econometrics}, 2021, {\it 225} (2), 175--199.
 
 \end{thebibliography}

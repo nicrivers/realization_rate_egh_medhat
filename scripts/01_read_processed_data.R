@@ -62,6 +62,8 @@ with_energy <- dat %>%
 
 dat <- inner_join(dat, with_energy)
 
+
+
 # Load the tax data
 taxdat <- read_csv("../raw_data/tax - ksp.csv") %>%
   rename(id = umLocationID)
@@ -75,6 +77,9 @@ rd <- dat %>%
   mutate(treated = !is.na(postretrofit_entrydate),
          post = (cons_date > postretrofit_entrydate),
          treated_post = if_else(treated & post, TRUE, FALSE),
-         year = year(cons_date))
+         year = year(cons_date)) %>%
+  # Drop all energy consumption observations between the pre- and post-retrofit
+  filter(!treated |
+           (treated & (cons_date > postretrofit_entrydate | cons_date < preretrofit_entrydate)))
 
 
