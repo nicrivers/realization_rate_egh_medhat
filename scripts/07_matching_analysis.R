@@ -88,3 +88,4 @@ etable(m1_all_energy_nomatch, m1_all_energy_match, m2_all_energy_match, m3_all_e
 
 
 etable(m1_all_energy_nomatch, m1_all_energy_match, m3_all_energy_match, m4_all_energy_match,  tex=TRUE, file="../output_figures_tables/did_matching_results.tex", title = "Panel data analysis with matching\\label{tab:didmatch}", replace = TRUE)
+etable(m1_all_energy_nomatch, m1_all_energy_match, m3_all_energy_match, m4_all_energy_match)
