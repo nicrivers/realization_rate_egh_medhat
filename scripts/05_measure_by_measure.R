@@ -108,7 +108,7 @@ p_mbm_es <- ggplot(mbm_coefs, aes(x=reorder(term, number), y=estimate, colour=fu
   labs(x=NULL,
        y="Estimated change in energy consumption") +
   scale_y_continuous(labels=scales::percent_format()) +
-  theme(legend.position = c(0.85,0.3)) 
+  theme(legend.position = c(0.85,0.75)) 
 
 ggsave(p_mbm_es, filename="../output_figures_tables/mbm_energy_savings.png", width=6, height=4)         
 

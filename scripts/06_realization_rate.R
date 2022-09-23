@@ -73,7 +73,7 @@ ggplot(mbm_projected_coefs, aes(x=reorder(term, number), y=estimate, colour=fuel
   scale_y_continuous(labels=scales::percent_format()) +
   coord_flip() +
   theme_bw() +
-  theme(legend.position = c(0.2,0.8)) +
+  theme(legend.position = c(0.2,0.6)) +
   scale_colour_brewer(name=NULL, palette = "Set1")
 
 ggsave("../output_figures_tables/projected_es_mbm.png", width = 6, height=4)
