@@ -15,7 +15,8 @@ dat <- read_stata(
         contains("Done"),
         contains("Electicalconsum"),
         contains("Electricalconsum"),
-        contains("gasconsum")
+        contains("gasconsum"),
+        "PreRetrofitFURNACETYPE"
         )) %>%
   clean_names() %>%
   dplyr::rename(elec=e11, gas=g11a) %>%
