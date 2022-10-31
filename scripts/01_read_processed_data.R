@@ -2,7 +2,7 @@
 
 dat <- read_stata(
     here::here(
-        "processed_data", "final_merge_step_2_control_group_anonymous.dta"
+        "processed_data", "final_merge_step_2_oct11_control_group_anonymous.dta"
     ),
     col_select = c(
         "PreretrofitENTRYDATE",
@@ -70,7 +70,7 @@ taxdat <- read_csv("../raw_data/tax - ksp.csv") %>%
   rename(id = umLocationID)
 
 # Merge with data
-dat <- left_join(dat, taxdat)
+dat <- inner_join(dat, taxdat)
 
 # Create regression data
 # Define treated and post variables

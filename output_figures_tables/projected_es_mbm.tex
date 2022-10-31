@@ -1,93 +1,37 @@
 
+\begingroup
+\centering
 \begin{tabular}{lccc}
-   \tabularnewline\midrule\midrule
-   Dependent Variables:    & log(postretrofit\_naturalgasconsum)-log(preretrofit\_naturalgasconsum) & log(postretrofit\_electricalconsump)-log(preretrofit\_electicalconsumpti) & log(postretrofit\_energy)-log(preretrofit\_energy)\\
-   Model:                  & (1)                                                                      & (2)                                                                         & (3)\\
-   \midrule \emph{Variables} &   &   &  \\
-   air\_sealing           & -0.0246$^{***}$                                                          & 0.0010                                                                      & -0.0204$^{**}$\\
-                           & (0.0095)                                                                 & (0.0011)                                                                    & (0.0081)\\
-   ceiling\_insulation    & -0.0870$^{***}$                                                          & -0.0062$^{***}$                                                             & -0.0695$^{***}$\\
-                           & (0.0082)                                                                 & (0.0009)                                                                    & (0.0070)\\
-   fnd\_header            & -0.0501$^{*}$                                                            & -0.0097$^{***}$                                                             & -0.0482$^{**}$\\
-                           & (0.0279)                                                                 & (0.0032)                                                                    & (0.0237)\\
-   windowsand\_doors      & -0.0555$^{***}$                                                          & -0.0002                                                                     & -0.0438$^{***}$\\
-                           & (0.0122)                                                                 & (0.0014)                                                                    & (0.0103)\\
-   central\_ac            & 0.0121                                                                   & $-5.72\times 10^{-5}$                                                      & 0.0098\\
-                           & (0.0131)                                                                 & (0.0015)                                                                    & (0.0111)\\
-   bsmt\_insulation       & -0.1266$^{***}$                                                          & -0.0073$^{***}$                                                             & -0.1055$^{***}$\\
-                           & (0.0222)                                                                 & (0.0025)                                                                    & (0.0189)\\
-   walls\_insulation      & -0.2615$^{***}$                                                          & -0.0230$^{***}$                                                             & -0.2270$^{***}$\\
-                           & (0.0242)                                                                 & (0.0028)                                                                    & (0.0206)\\
-   natural\_gas\_furnace & -0.2855$^{***}$                                                          & -0.0130$^{***}$                                                             & -0.2270$^{***}$\\
-                           & (0.0089)                                                                 & (0.0010)                                                                    & (0.0076)\\
-   \midrule \emph{Fit statistics} &   &   &  \\
-   Observations            & 559                                                                      & 559                                                                         & 559\\
-   R$^2$                   & 0.65397                                                                  & 0.28691                                                                     & 0.63030\\
-   Adjusted R$^2$          & 0.64958                                                                  & 0.27785                                                                     & 0.62561\\
-   \midrule\midrule\multicolumn{4}{l}{\emph{IID standard-errors in parentheses}}\\
+   \tabularnewline \midrule \midrule
+   Dependent Variables:    & log(postretrofit\_naturalgasconsum)-log(preretrofit\_naturalgasconsum)   & log(postretrofit\_electricalconsump)-log(preretrofit\_electicalconsumpti)   & log(postretrofit\_energy)-log(preretrofit\_energy)\\    
+   Model:                  & (1)                                                                      & (2)                                                                         & (3)\\  
+   \midrule
+   \emph{Variables}\\
+   air\_sealing            & -0.0251$^{***}$                                                          & 0.0010                                                                      & -0.0206$^{**}$\\   
+                           & (0.0096)                                                                 & (0.0011)                                                                    & (0.0082)\\   
+   ceiling\_insulation     & -0.0859$^{***}$                                                          & -0.0064$^{***}$                                                             & -0.0690$^{***}$\\   
+                           & (0.0083)                                                                 & (0.0010)                                                                    & (0.0070)\\   
+   fnd\_header             & -0.0503$^{*}$                                                            & -0.0095$^{***}$                                                             & -0.0482$^{**}$\\   
+                           & (0.0280)                                                                 & (0.0032)                                                                    & (0.0237)\\   
+   windowsand\_doors       & -0.0534$^{***}$                                                          & -0.0003                                                                     & -0.0421$^{***}$\\   
+                           & (0.0123)                                                                 & (0.0014)                                                                    & (0.0105)\\   
+   central\_ac             & 0.0124                                                                   & 0.0002                                                                      & 0.0106\\   
+                           & (0.0131)                                                                 & (0.0015)                                                                    & (0.0112)\\   
+   bsmt\_insulation        & -0.1275$^{***}$                                                          & -0.0074$^{***}$                                                             & -0.1062$^{***}$\\   
+                           & (0.0223)                                                                 & (0.0026)                                                                    & (0.0190)\\   
+   walls\_insulation       & -0.2562$^{***}$                                                          & -0.0207$^{***}$                                                             & -0.2205$^{***}$\\   
+                           & (0.0250)                                                                 & (0.0029)                                                                    & (0.0212)\\   
+   natural\_gas\_furnace   & -0.2863$^{***}$                                                          & -0.0131$^{***}$                                                             & -0.2282$^{***}$\\   
+                           & (0.0090)                                                                 & (0.0010)                                                                    & (0.0077)\\   
+   \midrule
+   \emph{Fit statistics}\\
+   Observations            & 545                                                                      & 545                                                                         & 545\\  
+   R$^2$                   & 0.65290                                                                  & 0.28659                                                                     & 0.63037\\  
+   Adjusted R$^2$          & 0.64838                                                                  & 0.27729                                                                     & 0.62555\\  
+   \midrule \midrule
+   \multicolumn{4}{l}{\emph{IID standard-errors in parentheses}}\\
    \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
 \end{tabular}
-
-
-
-\begin{tabular}{lccc}
-   \tabularnewline\midrule\midrule
-   Dependent Variables:    & log(postretrofit\_naturalgasconsum)-log(preretrofit\_naturalgasconsum) & log(postretrofit\_electricalconsump)-log(preretrofit\_electicalconsumpti) & log(postretrofit\_energy)-log(preretrofit\_energy)\\
-   Model:                  & (1)                                                                      & (2)                                                                         & (3)\\
-   \midrule \emph{Variables} &   &   &  \\
-   air\_sealing           & -0.0248$^{***}$                                                          & 0.0010                                                                      & -0.0205$^{**}$\\
-                           & (0.0095)                                                                 & (0.0011)                                                                    & (0.0081)\\
-   ceiling\_insulation    & -0.0869$^{***}$                                                          & -0.0062$^{***}$                                                             & -0.0694$^{***}$\\
-                           & (0.0082)                                                                 & (0.0009)                                                                    & (0.0070)\\
-   fnd\_header            & -0.0501$^{*}$                                                            & -0.0097$^{***}$                                                             & -0.0483$^{**}$\\
-                           & (0.0279)                                                                 & (0.0032)                                                                    & (0.0237)\\
-   windowsand\_doors      & -0.0554$^{***}$                                                          & -0.0002                                                                     & -0.0437$^{***}$\\
-                           & (0.0122)                                                                 & (0.0014)                                                                    & (0.0104)\\
-   central\_ac            & 0.0122                                                                   & $-5.22\times 10^{-5}$                                                      & 0.0099\\
-                           & (0.0131)                                                                 & (0.0015)                                                                    & (0.0111)\\
-   bsmt\_insulation       & -0.1265$^{***}$                                                          & -0.0073$^{***}$                                                             & -0.1054$^{***}$\\
-                           & (0.0222)                                                                 & (0.0025)                                                                    & (0.0189)\\
-   walls\_insulation      & -0.2615$^{***}$                                                          & -0.0230$^{***}$                                                             & -0.2270$^{***}$\\
-                           & (0.0243)                                                                 & (0.0028)                                                                    & (0.0206)\\
-   natural\_gas\_furnace & -0.2856$^{***}$                                                          & -0.0130$^{***}$                                                             & -0.2270$^{***}$\\
-                           & (0.0089)                                                                 & (0.0010)                                                                    & (0.0076)\\
-   \midrule \emph{Fit statistics} &   &   &  \\
-   Observations            & 558                                                                      & 558                                                                         & 558\\
-   R$^2$                   & 0.65403                                                                  & 0.28683                                                                     & 0.63038\\
-   Adjusted R$^2$          & 0.64963                                                                  & 0.27775                                                                     & 0.62568\\
-   \midrule\midrule\multicolumn{4}{l}{\emph{IID standard-errors in parentheses}}\\
-   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
-\end{tabular}
-
-
-
-\begin{tabular}{lccc}
-   \tabularnewline\midrule\midrule
-   Dependent Variables:    & log(postretrofit\_naturalgasconsum)-log(preretrofit\_naturalgasconsum) & log(postretrofit\_electricalconsump)-log(preretrofit\_electicalconsumpti) & log(postretrofit\_energy)-log(preretrofit\_energy)\\
-   Model:                  & (1)                                                                      & (2)                                                                         & (3)\\
-   \midrule \emph{Variables} &   &   &  \\
-   air\_sealing           & -0.0248$^{***}$                                                          & 0.0010                                                                      & -0.0205$^{**}$\\
-                           & (0.0095)                                                                 & (0.0011)                                                                    & (0.0081)\\
-   ceiling\_insulation    & -0.0869$^{***}$                                                          & -0.0062$^{***}$                                                             & -0.0694$^{***}$\\
-                           & (0.0082)                                                                 & (0.0009)                                                                    & (0.0070)\\
-   fnd\_header            & -0.0501$^{*}$                                                            & -0.0097$^{***}$                                                             & -0.0483$^{**}$\\
-                           & (0.0279)                                                                 & (0.0032)                                                                    & (0.0237)\\
-   windowsand\_doors      & -0.0554$^{***}$                                                          & -0.0002                                                                     & -0.0437$^{***}$\\
-                           & (0.0122)                                                                 & (0.0014)                                                                    & (0.0104)\\
-   central\_ac            & 0.0122                                                                   & $-5.22\times 10^{-5}$                                                      & 0.0099\\
-                           & (0.0131)                                                                 & (0.0015)                                                                    & (0.0111)\\
-   bsmt\_insulation       & -0.1265$^{***}$                                                          & -0.0073$^{***}$                                                             & -0.1054$^{***}$\\
-                           & (0.0222)                                                                 & (0.0025)                                                                    & (0.0189)\\
-   walls\_insulation      & -0.2615$^{***}$                                                          & -0.0230$^{***}$                                                             & -0.2270$^{***}$\\
-                           & (0.0243)                                                                 & (0.0028)                                                                    & (0.0206)\\
-   natural\_gas\_furnace & -0.2856$^{***}$                                                          & -0.0130$^{***}$                                                             & -0.2270$^{***}$\\
-                           & (0.0089)                                                                 & (0.0010)                                                                    & (0.0076)\\
-   \midrule \emph{Fit statistics} &   &   &  \\
-   Observations            & 558                                                                      & 558                                                                         & 558\\
-   R$^2$                   & 0.65403                                                                  & 0.28683                                                                     & 0.63038\\
-   Adjusted R$^2$          & 0.64963                                                                  & 0.27775                                                                     & 0.62568\\
-   \midrule\midrule\multicolumn{4}{l}{\emph{IID standard-errors in parentheses}}\\
-   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
-\end{tabular}
+\par\endgroup
 
 

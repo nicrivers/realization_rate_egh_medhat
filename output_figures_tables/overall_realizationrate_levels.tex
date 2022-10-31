@@ -1,24 +1,31 @@
 
+\begingroup
+\centering
 \begin{tabular}{lccc}
-   \tabularnewline\midrule\midrule
-   Dependent Variables:                                      & gas            & elec                  & energy\\
-   Model:                                                    & (1)            & (2)                   & (3)\\
-   \midrule \emph{Variables} &   &   &  \\
-   as.numeric(treated\_post) $\times$ delta\_gas\_lev    & 0.6245$^{***}$ &                       &   \\
-                                                             & (0.0661)       &                       &   \\
-   as.numeric(treated\_post) $\times$ delta\_elec\_lev   &                & 0.0499                &   \\
-                                                             &                & (0.4932)              &   \\
-   as.numeric(treated\_post) $\times$ delta\_energy\_lev &                &                       & 0.4970$^{***}$\\
-                                                             &                &                       & (0.0553)\\
-   \midrule \emph{Fixed-effects} &   &   &  \\
-   id                                                        & Yes            & Yes                   & Yes\\
-   cons\_date                                               & Yes            & Yes                   & Yes\\
-   \midrule \emph{Fit statistics} &   &   &  \\
-   Observations                                              & 3,192,857      & 3,210,277             & 3,176,946\\
-   R$^2$                                                     & 0.75198        & 0.54135               & 0.74822\\
-   Within R$^2$                                              & 0.00360        & $1.43\times 10^{-7}$ & 0.00327\\
-   \midrule\midrule\multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+   \tabularnewline \midrule \midrule
+   Dependent Variables:                                      & gas            & elec                  & energy\\  
+   Model:                                                    & (1)            & (2)                   & (3)\\  
+   \midrule
+   \emph{Variables}\\
+   as.numeric(treated\_post) $\times$ delta\_gas\_lev        & 0.6302$^{***}$ &                       &   \\   
+                                                             & (0.0627)       &                       &   \\   
+   as.numeric(treated\_post) $\times$ delta\_elec\_lev       &                & 0.1858                &   \\   
+                                                             &                & (0.4951)              &   \\   
+   as.numeric(treated\_post) $\times$ delta\_energy\_lev     &                &                       & 0.5041$^{***}$\\   
+                                                             &                &                       & (0.0527)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   id                                                        & Yes            & Yes                   & Yes\\  
+   cons\_date                                                & Yes            & Yes                   & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations                                              & 2,938,575      & 2,952,428             & 2,924,677\\  
+   R$^2$                                                     & 0.75884        & 0.53796               & 0.75338\\  
+   Within R$^2$                                              & 0.00380        & $2.02\times 10^{-6}$  & 0.00347\\  
+   \midrule \midrule
+   \multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
    \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
 \end{tabular}
+\par\endgroup
 
 

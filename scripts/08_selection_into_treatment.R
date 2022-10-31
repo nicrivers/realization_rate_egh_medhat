@@ -97,3 +97,42 @@ res_sunab_match_energy = feols(log(energy) ~ sunab(retrofit_end_year, consyear) 
 
 etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg = "att")
 etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg = "att", tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_match_sunab.tex", replace = TRUE)
+
+
+## Repeat analysis, matching on furnace type but also pre-treatment energy consumption and tax data
+rd_ever_treated_late_control <- rd_ever_treated %>%
+  mutate(treated = year(postretrofit_entrydate) < 2012) %>%
+  group_by(id,pre_retrofit_furnacetype) %>%
+  summarise(treated=mean(treated)) 
+
+rd_ever_treated_late_control_extra_match <- 
+rd_ever_treated_late_control %>%
+  inner_join(rd %>%
+               dplyr::select(id, gas, elec, consmonth, year)) %>%
+  filter(year < 2008) %>%
+  dplyr::select(id, treated, gas, elec, consmonth, pre_retrofit_furnacetype) %>%
+  mutate(season = 
+           case_when(consmonth %in% c(12,1,2,3) ~ "winter",
+                     consmonth %in% c(9,10,11,4,5) ~ "shoulder",
+                     consmonth %in% c(6,7,8) ~ "summer")) %>%
+  group_by(id, treated, pre_retrofit_furnacetype, season) %>%
+  summarise(gas = mean(gas, na.rm=T),
+            elec = mean(elec, na.rm=T)) %>%
+  pivot_wider(names_from="season", values_from=c("gas","elec")) %>%
+  drop_na() %>%
+  inner_join(taxdat)
+
+ever_treated_match <- matchit(treated ~ gas_shoulder + gas_summer + gas_winter + elec_shoulder + elec_summer + elec_winter + Neighbourhood + BuildingSize + log(TotalAssesmentValue) + EffectiveYearBuild + Building_Condition + Building_Type + umLocClass,
+                              data=rd_ever_treated_late_control_extra_match,
+                              method="nearest", distance="glm", exact = "pre_retrofit_furnacetype", replace=TRUE)
+
+match_data_ever_treated <- match.data(ever_treated_match) %>%
+  dplyr::select(id, weights) %>%
+  inner_join(rd_ever_treated)
+
+m1_ever_treated_match_gas <- feols(log(gas) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
+m1_ever_treated_match_elec <- feols(log(elec) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
+m1_ever_treated_match_energy <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
+
+etable(list(m1_ever_treated_match_gas, m1_ever_treated_match_elec, m1_ever_treated_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_sunab_more_match.tex", replace = TRUE)
+

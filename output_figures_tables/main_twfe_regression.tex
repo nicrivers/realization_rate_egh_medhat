@@ -1,22 +1,26 @@
 
 \begin{table}[htbp]
-   \centering
    \caption{Main panel regression\label{tab:maintwfe}}
+   \centering
    \begin{tabular}{lccc}
-      \tabularnewline\midrule\midrule
-      Dependent Variables: & log(gas)        & log(elec)             & log(energy)\\
-      Model:               & (1)             & (2)                   & (3)\\
-      \midrule \emph{Variables} &   &   &  \\
-      treated\_postTRUE   & -0.2092$^{***}$ & -0.0279$^{***}$       & -0.1532$^{***}$\\
-                           & (0.0066)        & (0.0099)              & (0.0066)\\
-      \midrule \emph{Fixed-effects} &   &   &  \\
-      id                   & Yes             & Yes                   & Yes\\
-      cons\_date          & Yes             & Yes                   & Yes\\
-      \midrule \emph{Fit statistics} &   &   &  \\
-      Observations         & 3,168,052       & 3,211,074             & 3,178,905\\
-      R$^2$                & 0.84895         & 0.47321               & 0.78437\\
-      Within R$^2$         & 0.00361         & $4.11\times 10^{-5}$ & 0.00228\\
-      \midrule\midrule\multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+      \tabularnewline \midrule \midrule
+      Dependent Variables: & log(gas)        & log(elec)             & log(energy)\\  
+      Model:               & (1)             & (2)                   & (3)\\  
+      \midrule
+      \emph{Variables}\\
+      treated\_postTRUE    & -0.2108$^{***}$ & -0.0385$^{***}$       & -0.1577$^{***}$\\   
+                           & (0.0065)        & (0.0102)              & (0.0063)\\   
+      \midrule
+      \emph{Fixed-effects}\\
+      id                   & Yes             & Yes                   & Yes\\  
+      cons\_date           & Yes             & Yes                   & Yes\\  
+      \midrule
+      \emph{Fit statistics}\\
+      Observations         & 2,917,877       & 2,953,814             & 2,926,831\\  
+      R$^2$                & 0.85342         & 0.46932               & 0.79168\\  
+      Within R$^2$         & 0.00395         & $8.68\times 10^{-5}$  & 0.00269\\  
+      \midrule \midrule
+      \multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
       \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
    \end{tabular}
 \end{table}

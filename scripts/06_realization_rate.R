@@ -95,7 +95,7 @@ p_mbm_projected <- ggplot(mbm_projected_coefs %>% filter(fuel == "energy"), aes(
   theme(legend.position = c(0.2,0.8)) +
   scale_colour_brewer(name=NULL, palette = "Set1")
 
-ggsave(p_mbm_projected, "../output_figures_tables/projected_es_mbm_all_energy.png", width = 6, height=4)
+ggsave(plot = p_mbm_projected, "../output_figures_tables/projected_es_mbm_all_energy.png", width = 6, height=4)
 
 # Plot with number chart on right
 
