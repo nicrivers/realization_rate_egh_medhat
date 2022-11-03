@@ -72,7 +72,7 @@ m1_ever_treated_match_gas <- feols(log(gas) ~ treated_post | id + cons_date, dat
 m1_ever_treated_match_elec <- feols(log(elec) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
 m1_ever_treated_match_energy <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
 
-etable(list(m1_ever_treated_match_gas, m1_ever_treated_match_elec, m1_ever_treated_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_sunab.tex", replace = TRUE)
+etable(list(m1_ever_treated_match_gas, m1_ever_treated_match_elec, m1_ever_treated_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_furnace_match.tex", replace = TRUE)
 
 
 # In event study form, with Sun and Abraham estimation
@@ -96,7 +96,7 @@ res_sunab_match_energy = feols(log(energy) ~ sunab(retrofit_end_year, consyear) 
                             weights = rd_stag_ever_treated$weights)
 
 etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg = "att")
-etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg = "att", tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_match_sunab.tex", replace = TRUE)
+etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg = "att", tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_furnace_match_sunab.tex", replace = TRUE)
 
 
 ## Repeat analysis, matching on furnace type but also pre-treatment energy consumption and tax data
@@ -134,5 +134,27 @@ m1_ever_treated_match_gas <- feols(log(gas) ~ treated_post | id + cons_date, dat
 m1_ever_treated_match_elec <- feols(log(elec) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
 m1_ever_treated_match_energy <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
 
-etable(list(m1_ever_treated_match_gas, m1_ever_treated_match_elec, m1_ever_treated_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_sunab_more_match.tex", replace = TRUE)
+etable(list(m1_ever_treated_match_gas, m1_ever_treated_match_elec, m1_ever_treated_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_furnace+energy+building_match.tex", replace = TRUE)
 
+## Same analysis again, but with Sun and Abraham correction
+rd_stag_ever_treated <- match.data(ever_treated_match) %>%
+  ungroup() %>%
+  dplyr::select(id, weights) %>%
+  inner_join(rd_stag) %>%
+  filter(years_to_treatment != -2000)
+
+res_sunab_match_gas = feols(log(gas) ~ sunab(retrofit_end_year, consyear) | id + consyear, rd_stag_ever_treated %>% 
+                              filter(years_to_treatment != -2000) %>% 
+                              mutate(retrofit_end_year = if_else(treated == FALSE, 10000, retrofit_end_year)),
+                            weights = rd_stag_ever_treated$weights)
+res_sunab_match_elec = feols(log(elec) ~ sunab(retrofit_end_year, consyear) | id + consyear, rd_stag_ever_treated %>% 
+                               filter(years_to_treatment != -2000) %>% 
+                               mutate(retrofit_end_year = if_else(treated == FALSE, 10000, retrofit_end_year)),
+                             weights = rd_stag_ever_treated$weights)
+res_sunab_match_energy = feols(log(energy) ~ sunab(retrofit_end_year, consyear) | id + consyear, rd_stag_ever_treated %>% 
+                                 filter(years_to_treatment != -2000) %>% 
+                                 mutate(retrofit_end_year = if_else(treated == FALSE, 10000, retrofit_end_year)),
+                               weights = rd_stag_ever_treated$weights)
+
+etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_furnace+energy+building_match_sunab.tex", replace = TRUE, agg="ATT")
+etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg="ATT")
