@@ -1,27 +1,23 @@
 
 \begin{table}[htbp]
-   \caption{Regression with house-month fixed effects\label{tab:hm}}
    \centering
+   \caption{Regression with house-month fixed effects\label{tab:hm}}
    \begin{tabular}{lcc}
-      \tabularnewline \midrule \midrule
+      \tabularnewline\midrule\midrule
       Dependent Variable: & \multicolumn{2}{c}{log(energy)}\\
-      Model:             & (1)             & (2)\\  
-      \midrule
-      \emph{Variables}\\
-      treated\_postTRUE  & -0.1577$^{***}$ & -0.1579$^{***}$\\   
-                         & (0.0063)        & (0.0063)\\   
-      \midrule
-      \emph{Fixed-effects}\\
-      id                 & Yes             & \\  
-      cons\_date         & Yes             & Yes\\  
-      id-consmonth       &                 & Yes\\  
-      \midrule
-      \emph{Fit statistics}\\
-      Observations       & 2,926,831       & 2,926,831\\  
-      R$^2$              & 0.79168         & 0.84947\\  
-      Within R$^2$       & 0.00269         & 0.00370\\  
-      \midrule \midrule
-      \multicolumn{3}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+      Model:             & (1)             & (2)\\
+      \midrule \emph{Variables} &   &  \\
+      treated\_postTRUE & -0.1577$^{***}$ & -0.1579$^{***}$\\
+                         & (0.0063)        & (0.0063)\\
+      \midrule \emph{Fixed-effects} &   &  \\
+      id                 & Yes             & \\
+      cons\_date        & Yes             & Yes\\
+      id-consmonth       &                 & Yes\\
+      \midrule \emph{Fit statistics} &   &  \\
+      Observations       & 2,926,828       & 2,926,828\\
+      R$^2$              & 0.79168         & 0.84947\\
+      Within R$^2$       & 0.00269         & 0.00371\\
+      \midrule\midrule\multicolumn{3}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
       \multicolumn{3}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
    \end{tabular}
 \end{table}

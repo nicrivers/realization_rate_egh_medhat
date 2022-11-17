@@ -66,13 +66,13 @@ st(data = rd %>%
      # For non-participants, replace NA with 0
      mutate(across(contains("done"), ~replace_na(.,0))) %>%
      summarise(across(c(contains("done"),contains("preretrofit"),contains("postretrofit")), mean)) %>%
-     select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+     dplyr::select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
      rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)), 
    file = "../output_figures_tables/house_sumtable.tex", out="latex")
 
 # energy consumption characteristics
 st(data = rd %>% mutate(participant = !is.na(postretrofit_naturalgasconsum)) %>%
-     select(participant, elec, gas, energy), group="participant",
+     dplyr::select(participant, elec, gas, energy), group="participant",
    file = "../output_figures_tables/month_sumtable.tex", out="latex")
 
 # Formatted summary table
@@ -81,7 +81,7 @@ st(data = rd %>%
      # For non-participants, replace NA with 0
      mutate(across(contains("done"), ~replace_na(.,0))) %>%
      summarise(across(c(contains("done"),contains("gj_per_yr"), contains("value"), contains("size"), contains("yearbuild")), mean, na.rm=T)) %>%
-     select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+     dplyr::select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
      rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
      mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr)),
    group = "participant",
@@ -95,7 +95,7 @@ tbl_summary(rd %>%
      # For non-participants, replace NA with 0
      mutate(across(contains("done"), ~replace_na(.,0))) %>%
      summarise(across(c(contains("done"),contains("gj_per_yr"), contains("value"), contains("size"), contains("yearbuild")), mean, na.rm=T)) %>%
-     select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+     dplyr::select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
      rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
      mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr)),
    by = "participant")
@@ -107,7 +107,7 @@ sum_dat <- rd %>%
   # For non-participants, replace NA with 0
   mutate(across(contains("done"), ~replace_na(.,0))) %>%
   summarise(across(c(contains("done"),contains("gj_per_yr"), contains("value"), contains("size"), contains("yearbuild")), mean, na.rm=T)) %>%
-  select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+  dplyr::select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
   rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
   mutate(participant = !is.na(predicted_postretrofit_gas_gj_per_yr))
 
