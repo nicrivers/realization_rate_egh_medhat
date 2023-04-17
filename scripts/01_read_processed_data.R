@@ -2,7 +2,8 @@
 
 dat <- read_stata(
     here::here(
-        "processed_data", "final_merge_step_2_oct11_control_group_anonymous.dta"
+        "processed_data", "final_merge_step_2_April_2023_control_group_anonymous.dta"
+        #"processed_data", "final_merge_step_2_oct11_control_group_anonymous.dta"
     ),
     col_select = c(
         "PreretrofitENTRYDATE",
@@ -16,7 +17,9 @@ dat <- read_stata(
         contains("Electicalconsum"),
         contains("Electricalconsum"),
         contains("gasconsum"),
-        "PreRetrofitFURNACETYPE"
+        "PreRetrofitFURNACETYPE" 
+        # incentive variables
+        ,contains("paid")
         )) %>%
   clean_names() %>%
   dplyr::rename(elec=e11, gas=g11a) %>%
@@ -56,9 +59,9 @@ dat <- dat %>%
 # Only keep households with both gas and electricity consumption
 with_energy <- dat %>%
   group_by(id) %>%
-  summarise(across(c(gas, elec, energy), mean, na.rm=T)) %>%
+  summarise(gas = mean(gas, na.rm=T),
+            elec = mean(elec, na.rm=T)) %>%
   filter(!is.na(gas) & !is.na(elec)) %>%
-  #filter(!is.na(gas) | !is.na(elec)) %>% # Use this to keep houses with either gas or electricity
   dplyr::select(id)
 
 dat <- inner_join(dat, with_energy)
@@ -67,7 +70,9 @@ dat <- inner_join(dat, with_energy)
 
 # Load the tax data
 taxdat <- read_csv("../raw_data/tax - ksp.csv") %>%
-  rename(id = umLocationID)
+  rename(id = umLocationID) %>%
+  # There are some repeated lines in the tax data
+  distinct(id)
 
 # Merge with data
 dat <- inner_join(dat, taxdat)
