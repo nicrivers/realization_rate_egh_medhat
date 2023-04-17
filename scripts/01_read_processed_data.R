@@ -2,8 +2,12 @@
 
 dat <- read_stata(
     here::here(
+<<<<<<< HEAD
         "processed_data", "final_merge_step_2_April_2023_control_group_anonymous.dta"
         #"processed_data", "final_merge_step_2_oct11_control_group_anonymous.dta"
+=======
+        "processed_data", "final_merge_step_2_control_group_anonymous.dta"
+>>>>>>> 12e4bd92f53648f1e849512da96b615ea67ebce6
     ),
     col_select = c(
         "PreretrofitENTRYDATE",

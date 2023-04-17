@@ -21,13 +21,33 @@ p2_mbm <- tibble(measure=names(p2_mbm),number=p2_mbm) %>%
 # - exp_floor -- v. few
 # - type1ugr -- same as natural gas furnace upgrade
 
+# Remane measures
+measure_names <- tibble(
+  term = c("air_sealing",
+           "natural_gas_furnace",
+           "ceiling_insulation",
+           "windowsand_doors",
+           "central_ac",
+           "bsmt_insulation",
+           "fnd_header",
+           "walls_insulation"),
+  full_name = c("air sealing",
+                "gas furnace upgrade",
+                "attic insulation",
+                "window/door upgrade",
+                "central ac upgrade",
+                "basement insulation",
+                "foundation header insulation",
+                "wall insulation")
+)
+
 
 #####
 # Create a correlation plot showing correlations between measure adoptions
 res <- dat %>%
   group_by(id) %>%
   summarise(across(contains("done"), mean)) %>%
-  select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
+  dplyr::select(-id, - ashp_upgrade_done, -gshp_upgrade_done, -oil_furnace_upgrade_done, -dhw_upgrade_done, -exp_floor_ugr_done, -type1ugr_done) %>%
   drop_na() %>%
   rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
   cor()
@@ -54,7 +74,7 @@ rd_mbm <- rd %>%
   # For all measures, replace NA (for non-participants) with 0
   mutate(across(contains("done"), ~replace_na(.,0))) %>%
   rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
-  select(-type1ugr_done, -exp_floor, -ashp, -gshp, -oil_furnace)
+  dplyr::select(-type1ugr_done, -exp_floor, -ashp, -gshp, -oil_furnace)
 
 m2_gas_mbm <- feols(log(gas) ~ i(treated_post, air_sealing, ref=0) + 
                       i(treated_post, ceiling_insulation, ref=0) + 
@@ -86,6 +106,38 @@ m2_energy_mbm <- feols(log(energy) ~ i(treated_post, air_sealing, ref=0) +
 etable(m2_gas_mbm, m2_elec_mbm, m2_energy_mbm)
 etable(m2_gas_mbm, m2_elec_mbm, m2_energy_mbm, tex=TRUE, file="../output_figures_tables/mbm_results_es.tex")
 
+# Measure savings from all thermal envelope measures combined
+deep_rf_estimated_gas <- glht(m2_gas_mbm, linfct = "`treated_post::TRUE:air_sealing` + 
+           `treated_post::TRUE:ceiling_insulation` + 
+           `treated_post::TRUE:fnd_header` + 
+           `treated_post::TRUE:windowsand_doors` + 
+           `treated_post::TRUE:bsmt_insulation` + 
+           `treated_post::TRUE:walls_insulation`= 0")
+deep_rf_estimated_elec <- glht(m2_elec_mbm, linfct = "`treated_post::TRUE:air_sealing` + 
+           `treated_post::TRUE:ceiling_insulation` + 
+           `treated_post::TRUE:fnd_header` + 
+           `treated_post::TRUE:windowsand_doors` + 
+           `treated_post::TRUE:bsmt_insulation` + 
+           `treated_post::TRUE:walls_insulation`= 0")
+deep_rf_estimated_energy <- glht(m2_energy_mbm, linfct = "`treated_post::TRUE:air_sealing` + 
+           `treated_post::TRUE:ceiling_insulation` + 
+           `treated_post::TRUE:fnd_header` + 
+           `treated_post::TRUE:windowsand_doors` + 
+           `treated_post::TRUE:bsmt_insulation` + 
+           `treated_post::TRUE:walls_insulation`= 0")
+
+dr_all <- tibble(
+  term = "complete envelope retrofit",
+  fuel = c("gas", "electricity", "energy"),
+  estimate = c(coef(deep_rf_estimated_gas),
+               coef(deep_rf_estimated_elec),
+               coef(deep_rf_estimated_energy)),
+  std.error = c(sqrt(vcov(deep_rf_estimated_gas)),
+                sqrt(vcov(deep_rf_estimated_elec)),
+                sqrt(vcov(deep_rf_estimated_energy))),
+  number = NA
+)
+
 # Plot measure by measure coefficients
 mbm_coefs <- 
   bind_rows(
@@ -94,7 +146,10 @@ mbm_coefs <-
     tidy(m2_energy_mbm) %>% mutate(fuel="energy")
   ) %>%
   mutate(term = gsub("treated\\_post\\:\\:TRUE\\:","",term)) %>%
-  inner_join(p2_mbm)
+  inner_join(p2_mbm) %>%
+  inner_join(measure_names) %>%
+  dplyr::select(term=full_name, estimate, std.error, fuel, number) %>%
+  bind_rows(dr_all)
 
 p_mbm_es <- ggplot(mbm_coefs, aes(x=reorder(term, number), y=estimate, colour=fuel)) +
   geom_point(position=position_dodge(width=0.5)) +
@@ -108,7 +163,8 @@ p_mbm_es <- ggplot(mbm_coefs, aes(x=reorder(term, number), y=estimate, colour=fu
   labs(x=NULL,
        y="Estimated change in energy consumption") +
   scale_y_continuous(labels=scales::percent_format()) +
-  theme(legend.position = c(0.85,0.75)) 
+  theme(legend.position = c(0.85,0.55)) +
+  annotate(geom="rect",xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
 
 ggsave(p_mbm_es, filename="../output_figures_tables/mbm_energy_savings.png", width=6, height=4)         
 
@@ -124,7 +180,8 @@ p_mbm_es_all_energy <- ggplot(mbm_coefs %>% filter(fuel == "energy"), aes(x=reor
   labs(x=NULL,
        y="Estimated change in energy consumption") +
   scale_y_continuous(labels=scales::percent_format()) +
-  theme(legend.position = c(0.85,0.3)) 
+  theme(legend.position = c(0.85,0.3)) +
+  annotate(geom="rect",xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
 
 ggsave(p_mbm_es_all_energy, filename="../output_figures_tables/mbm_energy_savings_energy_only.png", width=6, height=4) 
 
@@ -138,7 +195,8 @@ p_mbm_count <- mbm_coefs %>%
   theme_bw() +
   labs(x=NULL,
        y="Number") +
-  theme(axis.text.y=element_blank())
+  theme(axis.text.y=element_blank()) +
+  annotate(geom="rect",xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
 
 p_mbm_es + p_mbm_count + plot_layout(ncol=2, nrow=1, widths =c(2,1))
 
@@ -156,7 +214,8 @@ p_mbm_count_all_energy <- mbm_coefs %>%
   theme_bw() +
   labs(x=NULL,
        y="Number") +
-  theme(axis.text.y=element_blank())
+  theme(axis.text.y=element_blank()) +
+  annotate(geom="rect",xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
 
 p_mbm_es_all_energy + p_mbm_count_all_energy + plot_layout(ncol=2, nrow=1, widths =c(2,1))
 

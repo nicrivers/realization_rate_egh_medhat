@@ -11,12 +11,15 @@ rd_ps <- rd %>%
   group_by(id) %>%
   summarise(across(everything(), mean)) %>%
   rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
-  filter(exp_floor != 1,
+  filter(
          ashp != 1,
          oil_furnace != 1,
          dhw != 1) %>% 
   # Some (4) fnd_headers get coded as NA rather than 0
-  replace_na(list(fnd_header=0))
+  replace_na(list(fnd_header=0)) %>%
+  # lots of exp_floors get coded as NA rather than 0
+  replace_na(list(exp_floor=0))
+
 
 # Regress projected savings on measures completed
 projected_mbm_gas <- feols(log(postretrofit_naturalgasconsum) - log(preretrofit_naturalgasconsum) ~ 
@@ -53,6 +56,40 @@ projected_mbm_energy <- feols(log(postretrofit_energy) - log(preretrofit_energy)
 etable(projected_mbm_gas, projected_mbm_elec, projected_mbm_energy)
 etable(projected_mbm_gas, projected_mbm_elec, projected_mbm_energy, tex=TRUE, file = "../output_figures_tables/projected_es_mbm.tex", replace = TRUE)
 
+# Measure savings from all thermal envelope measures combined
+deep_rf_proj_gas <- glht(projected_mbm_gas, linfct = "`air_sealing` + 
+           `ceiling_insulation` + 
+           `fnd_header` + 
+           `windowsand_doors` + 
+           `bsmt_insulation` + 
+           `walls_insulation`= 0")
+deep_rf_proj_elec <- glht(projected_mbm_elec, linfct = "`air_sealing` + 
+           `ceiling_insulation` + 
+           `fnd_header` + 
+           `windowsand_doors` + 
+           `bsmt_insulation` + 
+           `walls_insulation`= 0")
+deep_rf_proj_energy <- glht(projected_mbm_energy, linfct = "`air_sealing` + 
+           `ceiling_insulation` + 
+           `fnd_header` + 
+           `windowsand_doors` + 
+           `bsmt_insulation` + 
+           `walls_insulation`= 0")
+
+
+dr_all_proj <- tibble(
+  term = "complete envelope retrofit",
+  fuel = c("gas", "electricity", "energy"),
+  estimate = c(coef(deep_rf_proj_gas),
+               coef(deep_rf_proj_elec),
+               coef(deep_rf_proj_energy)),
+  std.error = c(sqrt(vcov(deep_rf_proj_gas)),
+                sqrt(vcov(deep_rf_proj_elec)),
+                sqrt(vcov(deep_rf_proj_energy))),
+  number = NA
+)
+
+
 # Plot projected savings coefficients
 mbm_projected_coefs <- 
   bind_rows(
@@ -60,7 +97,11 @@ mbm_projected_coefs <-
     tidy(projected_mbm_elec) %>% mutate(fuel = "electricity"),
     tidy(projected_mbm_energy) %>% mutate(fuel = "energy")
   ) %>%
-  inner_join(p2_mbm)
+  inner_join(p2_mbm) %>%
+  dplyr::select(term, estimate, std.error, fuel, number) %>%
+  inner_join(measure_names) %>%
+  dplyr::select(term=full_name, estimate, std.error, fuel, number) %>%
+  bind_rows(dr_all_proj)
 
 ggplot(mbm_projected_coefs, aes(x=reorder(term, number), y=estimate, colour=fuel)) +
   geom_point(position=position_dodge(width=0.5)) +
@@ -74,7 +115,8 @@ ggplot(mbm_projected_coefs, aes(x=reorder(term, number), y=estimate, colour=fuel
   coord_flip() +
   theme_bw() +
   theme(legend.position = c(0.2,0.6)) +
-  scale_colour_brewer(name=NULL, palette = "Set1")
+  scale_colour_brewer(name=NULL, palette = "Set1") +
+  geom_rect(aes(xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf), fill="grey", alpha=0.01, colour=NA)
 
 ggsave("../output_figures_tables/projected_es_mbm.png", width = 6, height=4)
 
@@ -93,7 +135,8 @@ p_mbm_projected <- ggplot(mbm_projected_coefs %>% filter(fuel == "energy"), aes(
   coord_flip() +
   theme_bw() +
   theme(legend.position = c(0.2,0.8)) +
-  scale_colour_brewer(name=NULL, palette = "Set1")
+  scale_colour_brewer(name=NULL, palette = "Set1") +
+  annotate(geom="rect",xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
 
 ggsave(plot = p_mbm_projected, "../output_figures_tables/projected_es_mbm_all_energy.png", width = 6, height=4)
 
@@ -169,7 +212,7 @@ projected_vs_realized <-
          )
 
 ggplot(projected_vs_realized,
-       aes(x=reorder(term, estimated_savings))) +
+       aes(x=reorder(term, number))) +
   geom_point(aes(y=estimated_savings,colour="Estimated")) +
   geom_point(aes(y=projected_savings, colour="Projected")) +
   facet_wrap(~ factor(fuel,levels = c("gas","electricity","energy"))) +
@@ -188,7 +231,8 @@ ggplot(projected_vs_realized,
   scale_y_continuous(labels=scales::percent_format(accuracy = 1)) +
   theme_bw() +
   scale_colour_brewer(name=NULL, palette="Set1") +
-  geom_text(aes(y=estimated_savings, label=rr_label), size=3, nudge_x = 0.25)
+  geom_text(aes(y=estimated_savings, label=rr_label), size=3, nudge_x = 0.25) +
+  annotate(geom="rect",xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
 
 ggsave("../output_figures_tables/mbm_realization_rate.png", width=8, height=6)
 
@@ -212,7 +256,8 @@ ggplot(projected_vs_realized %>% filter(fuel == "energy"),
   scale_y_continuous(labels=scales::percent_format(accuracy = 1)) +
   theme_bw() +
   scale_colour_brewer(name=NULL, palette="Set1") +
-  geom_text(aes(y=estimated_savings, label=rr_label), size=3, nudge_x = 0.25)
+  geom_text(aes(y=estimated_savings, label=rr_label), size=3, nudge_x = 0.25) +
+  annotate(geom="rect",xmin=8.5,xmax=9.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
 
 ggsave("../output_figures_tables/mbm_realization_rate_all_energy.png", width=8, height=6)
 
