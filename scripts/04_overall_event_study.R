@@ -1,87 +1,130 @@
 # Graph the event study
 
-# I work with annual data for the event study (because of package errors with monthly data)
-rd_stag <- rd %>%
-  mutate(retrofit_start_year = year(preretrofit_entrydate),
-         retrofit_end_year = year(postretrofit_entrydate),
-         years_to_treatment = case_when(
-           consyear < retrofit_start_year ~ consyear - retrofit_start_year,
-           consyear > retrofit_end_year ~ consyear - retrofit_end_year,
-           is.na(retrofit_end_year) ~ -1000,
-           consyear >= retrofit_start_year & consyear <= retrofit_end_year ~ -2000
-         )) %>%
-  group_by(id,consyear,treated,post,treated_post,years_to_treatment,retrofit_start_year, retrofit_end_year) %>%
-  summarise(elec=mean(elec, na.rm=T),
-            gas=mean(gas, na.rm=T),
-            energy=mean(energy, na.rm=T))
+##################
+# TWFE estimators
+##################
 
+# TWFE estimator  | All households
+es_twfe_all <- feols(log(energy) ~ i(years_to_treatment, ref = c(-1, -1000)) | id + consyear, rd_stag %>% 
+                       filter(years_to_treatment != -2000))
 
-res_twfe_onlytreated = feols(log(energy) ~ i(years_to_treatment, ref = c(-1, -1000)) | id + consyear, rd_stag %>% 
+# TWFE estimator  | Participants only
+es_twfe_partic = feols(log(energy) ~ i(years_to_treatment, ref = c(-1, -1000)) | id + consyear, rd_stag %>% 
                                filter(treated == TRUE, 
-                                      years_to_treatment != -2000))
+                                      years_to_treatment != -2000,
+                                      consyear < 2012))
 
-res_twfe = feols(log(energy) ~ i(years_to_treatment, ref = c(-1, -1000)) | id + consyear, rd_stag %>% 
-                   filter(years_to_treatment != -2000))
+############################
+# Sun and Abraham estimators
+############################
+
+# SA estimator    | All households
+es_sunab_all <- feols(log(energy) ~ sunab(retrofit_start_year, consyear) | id + consyear, rd_stag %>% 
+        filter(years_to_treatment != -2000) %>% 
+          # Set treatment year to the future for untreated households
+          replace_na(list(retrofit_start_year=3000)) , cluster=~id + consyear)
+
+# SA estimator    | Participants only
+es_sunab_partic <- feols(log(energy) ~ sunab(retrofit_start_year, consyear) | id + consyear, rd_stag %>% 
+                        filter(treated == TRUE,
+                               years_to_treatment != -2000,
+                               consyear < 2012), cluster=~id + consyear)
+
+###################################
+# Callaway and Sant'anna estimators
+###################################
+
+# Set up the data
+rd_stag_cs <- rd_stag %>%
+  ungroup() %>%
+  # Create the dependent variable, and remove missing
+  mutate(log_energy = log(energy)) %>%
+  filter(!is.na(log_energy),
+         log_energy != -Inf) %>%
+  # For observations that are never treated, set retrofit start year to zero
+  # As in https://bcallaway11.github.io/did/articles/did-basics.html#an-example-with-real-data
+  # I can also set to a large number (e.g., 3000), as in https://raw.githack.com/Mixtape-Sessions/Advanced-DID/main/Exercises/Exercise-1/Solutions/medicaid-analysis-solutions-R.html
+  # and this generates identical results
+  mutate(retrofit_start_year = 
+           if_else(is.na(retrofit_start_year), 0, retrofit_start_year)) %>%
+  # Remove years between first and last audit
+  filter(years_to_treatment != -2000) %>%
+  dplyr::select(id, consyear, retrofit_start_year, log_energy)
 
 
-# Sun and Abraham package
-res_sunab = feols(log(energy) ~ sunab(retrofit_end_year, consyear) | id + consyear, rd_stag %>% 
-                    filter(years_to_treatment != -2000) %>% 
-                    mutate(retrofit_end_year = if_else(treated == FALSE, 10000, retrofit_end_year)))
-
-# Callaway an Sant'a Anna package
-# In this case, I didn't drop the period *during* the retrofit because of package errors. 
-# This affects coefficient estimates for -1 and 0 periods.
-rd_stag_cs <- rd %>%
-  mutate(retrofit_start_year = year(preretrofit_entrydate),
-         retrofit_end_year = year(postretrofit_entrydate)) %>%
-  group_by(id,consyear,treated,retrofit_start_year, retrofit_end_year) %>%
-  summarise(elec=sum(elec, na.rm=T),
-            gas=sum(gas, na.rm=T),
-            energy=sum(energy, na.rm=T)) %>%
-  mutate(retrofit_end_year = if_else(is.na(retrofit_end_year),0,retrofit_end_year),
-         log_gas=log(gas),
-         log_elec=log(elec),
-         log_energy=log(energy)) %>%
-  filter(!is.na(log_gas),
-         !is.na(log_elec),
-         !is.na(log_energy),
-         log_gas != -Inf,
-         log_elec != -Inf,
-         log_energy != -Inf)
-
-res_cs <- att_gt(yname = "log_gas",
-                 gname = "retrofit_end_year",
-                 idname = "id",
-                 tname = "consyear",
-                 xformla = ~1,
-                 data = rd_stag_cs
+m_cs_all <- att_gt(
+  yname = "log_energy",
+  tname = "consyear",
+  idname = "id",
+  gname = "retrofit_start_year",
+  control_group = "notyettreated",
+  xformla = ~1,
+  data = rd_stag_cs,
+  allow_unbalanced_panel = TRUE,
+  base_period = "universal"
 )
 
-cs_coefs <- aggte(res_cs, type="dynamic")
+es_cs_all <- aggte(m_cs_all, type="dynamic", na.rm=T)
+
+m_cs_partic <- att_gt(yname = "log_energy",
+                      tname = "consyear",
+                      idname = "id",
+                      gname = "retrofit_start_year",
+                      xformla = ~1,
+                      control_group = "notyettreated",
+                      data = rd_stag_cs %>%
+                        filter(retrofit_start_year > 0),
+                      allow_unbalanced_panel = TRUE,
+                      base_period = "universal"
+)
+
+es_cs_partic <- aggte(m_cs_partic, type="dynamic", na.rm=T)
+
+##########################
+# Collect all coefficients
+##########################
 
 cs_df <- tibble(
-  term = cs_coefs$egt,
-  estimate = cs_coefs$att.egt,
-  std.error = cs_coefs$se.egt,
-  model="Callaway&Sant'aAnna"
-)
+  term = es_cs_all$egt,
+  estimate = es_cs_all$att.egt,
+  std.error = es_cs_all$se.egt,
+  model="Callaway&Sant'Anna",
+  sample="All"
+) %>%
+  bind_rows(
+    tibble(
+      term = es_cs_partic$egt,
+      estimate = es_cs_partic$att.egt,
+      std.error = es_cs_partic$se.egt,
+      model="Callaway&Sant'Anna",
+      sample="Participants"
+    )
+  )
 
 # Collect all coefficients
 all_es_coefs <-
   bind_rows(
-  tidy(res_sunab) %>% mutate(model = "Sun&Abraham"),
-  tidy(res_twfe_onlytreated) %>% mutate(model = "TWFE-only treated"),
-  tidy(res_twfe) %>% mutate(model="TWFE-incl. never treated")
+    tidy(es_twfe_all) %>% mutate(model = "TWFE", sample="All"),
+    tidy(es_twfe_partic) %>% mutate(model = "TWFE", sample="Participants"),
+    tidy(es_sunab_all) %>% mutate(model="Sun&Abraham", sample="All"),
+    tidy(es_sunab_partic) %>% mutate(model="Sun&Abraham", sample="Participants")
   ) %>%
   dplyr::select(
-    term, estimate, std.error, model
+    term, estimate, std.error, model, sample
   ) %>%
   mutate(term = str_extract(term,"-?\\d+"),
          term = as.numeric(term)) %>%
-  bind_rows(cs_df)
+  bind_rows(cs_df) %>%
+  # Keep five years before and 10 years after treatment
+  filter(term <= 10, term >= -5) %>%
+  # Manually impose zero point estimate in year before treatment where missing
+  bind_rows(
+    expand_grid(model=c("Callaway&Sant'Anna","Sun&Abraham","TWFE"), sample=c("All", "Participants"), term=-1, estimate=0, std.error=NA)
+  )
+  
 
-ggplot(all_es_coefs, aes(x=term, y=estimate, colour=model)) +
+# Plot the event study
+ggplot(all_es_coefs, aes(x=term, y=estimate, colour=model, linetype=sample)) +
   geom_point(position=position_dodge(width=0.5)) +
   geom_errorbar(position=position_dodge(width=0.5),
                 aes(ymin=estimate-1.96*std.error,
@@ -91,40 +134,9 @@ ggplot(all_es_coefs, aes(x=term, y=estimate, colour=model)) +
   theme(legend.position = c(0.2,0.2)) +
   labs(x="Years until treatment",
        y="Impact on total energy consumption") +
-  scale_y_continuous(labels=scales::percent_format())
+  scale_y_continuous(labels=scales::percent_format()) 
 
-ggsave("../output_figures_tables/event_study_plot.png", width=6, height=4)
+ggsave("../output_figures_tables/event_study_plot.png", width=6, height=6)
 
-# Just plot TWFE model
-ggplot(all_es_coefs %>% filter(model == "TWFE-incl. never treated"), aes(x=term, y=estimate)) +
-  geom_point(position=position_dodge(width=0.5)) +
-  geom_errorbar(position=position_dodge(width=0.5),
-                aes(ymin=estimate-1.96*std.error,
-                    ymax=estimate+1.96*std.error)) +
-  scale_colour_brewer(palette="Set1", name=NULL) +
-  theme_bw() +
-  theme(legend.position = c(0.2,0.2)) +
-  labs(x="Years until treatment",
-       y="Impact on total energy consumption") +
-  scale_y_continuous(labels=scales::percent_format())
-ggsave("../output_figures_tables/event_study_plot_twfe_only.png", width=6, height=4)
-
-# Just plot TWFE and SA models
-ggplot(all_es_coefs %>% filter(model %in% c("TWFE-incl. never treated", "Sun&Abraham")), aes(x=term, y=estimate, colour=model)) +
-  geom_point(position=position_dodge(width=0.5)) +
-  geom_errorbar(position=position_dodge(width=0.5),
-                aes(ymin=estimate-1.96*std.error,
-                    ymax=estimate+1.96*std.error)) +
-  scale_colour_brewer(palette="Set1", name=NULL) +
-  theme_bw() +
-  theme(legend.position = c(0.2,0.2)) +
-  labs(x="Years until treatment",
-       y="Impact on total energy consumption") +
-  scale_y_continuous(labels=scales::percent_format()) +
-  geom_hline(yintercept = 0, linetype="dashed")
-ggsave("../output_figures_tables/event_study_plot_twfe_sa_only.png", width=6, height=4)
-
-# Aggregated
-aggregate(res_sunab, c("ATT" = "consyear::[^-]"))
 
           

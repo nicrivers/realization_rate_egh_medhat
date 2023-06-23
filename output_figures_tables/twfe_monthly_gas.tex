@@ -1,0 +1,27 @@
+
+\begingroup
+\centering
+\begin{tabular}{lccccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variable: & \multicolumn{5}{c}{log(gas)}\\
+   Model:             & (1)             & (2)             & (3)             & (4)             & (5)\\  
+   \midrule
+   \emph{Variables}\\
+   treated\_postTRUE  & -0.2081$^{***}$ & -0.1944$^{***}$ & -0.1993$^{***}$ & -0.1901$^{***}$ & -0.2196$^{***}$\\   
+                      & (0.0062)        & (0.0076)        & (0.0074)        & (0.0078)        & (0.0089)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   id                 & Yes             & Yes             & Yes             & Yes             & Yes\\  
+   cons\_date         & Yes             & Yes             & Yes             & Yes             & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations       & 2,874,433       & 428,688         & 429,313         & 429,103         & 75,699\\  
+   R$^2$              & 0.85408         & 0.85549         & 0.85894         & 0.86033         & 0.84099\\  
+   Within R$^2$       & 0.00384         & 0.01381         & 0.01480         & 0.01352         & 0.01773\\  
+   \midrule \midrule
+   \multicolumn{6}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+   \multicolumn{6}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+\par\endgroup
+
+

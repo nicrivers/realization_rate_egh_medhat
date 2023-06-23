@@ -64,6 +64,7 @@ corrplot(res, type = "upper", order = "hclust",
 dev.off()
 
 
+
 #####
 # Estimate regressions to determine energy savings by measure
 rd_mbm <- rd %>%
@@ -137,6 +138,63 @@ dr_all <- tibble(
                 sqrt(vcov(deep_rf_estimated_energy))),
   number = NA
 )
+
+
+# Alternative approach to measure complete envelope retrofits
+# Retain only houses that undergo complete retrofit + controls
+complete_retrofit_sample <- rd %>%
+  group_by(id) %>%
+  summarise(across(contains("done"),  ~ mean(.x))) %>%
+  mutate(complete_envelope_retrofit_ugr_done = (air_sealing_ugr_done &
+                                            walls_insulation_ugr_done &
+                                            (bsmt_insulation_ugr_done | fnd_header_ugr_done) &
+                                            windowsand_doors_ugr_done )) %>%
+  dplyr::select(id, complete_envelope_retrofit_ugr_done) %>%
+  inner_join(rd) %>%
+  mutate(across(contains("done"), ~replace_na(.,0))) %>%
+  rename_with(., ~gsub("\\_ugr_done|\\_upgrade_done","", .x)) %>%
+  filter(treated == FALSE | complete_envelope_retrofit == TRUE)
+
+m_cer_energy <- feols(log(energy) ~ i(treated_post, complete_envelope_retrofit, ref=0) + 
+                         i(treated_post, natural_gas_furnace, ref=0)  | id + cons_date, data=complete_retrofit_sample, cluster = ~id+cons_date)
+m_cer_gas <- feols(log(gas) ~ i(treated_post, complete_envelope_retrofit, ref=0) + 
+                        i(treated_post, natural_gas_furnace, ref=0)  | id + cons_date, data=complete_retrofit_sample, cluster = ~id+cons_date)
+m_cer_elec <- feols(log(elec) ~ i(treated_post, complete_envelope_retrofit, ref=0) + 
+                        i(treated_post, natural_gas_furnace, ref=0)  | id + cons_date, data=complete_retrofit_sample, cluster = ~id+cons_date)
+
+dr_all_actual <- tibble(
+  term = "complete envelope retrofit",
+  fuel = c("gas", "electricity", "energy"),
+  estimate = c(coef(m_cer_gas)[1],
+               coef(m_cer_elec)[1],
+               coef(m_cer_energy)[1]),
+  std.error = c(sqrt(diag(vcov(m_cer_gas)))[1],
+                sqrt(diag(vcov(m_cer_elec)))[1],
+                sqrt(diag(vcov(m_cer_energy)))[1]),
+  number = complete_retrofit_sample %>% filter(complete_envelope_retrofit==TRUE) %>% dplyr::select(id) %>% n_distinct()
+)
+
+### Plot actual vs. imputed deep envelope retrofits
+bind_rows(dr_all %>% 
+             mutate(measure = "imputed"),
+           dr_all_actual %>%
+             mutate(measure = "actual")) %>%
+  ggplot(aes(x=reorder(measure, number), y=estimate, colour=fuel)) +
+  geom_point(position=position_dodge(width=0.5)) +
+  geom_errorbar(position=position_dodge(width=0.5),
+                aes(ymin=estimate-1.96*std.error,
+                    ymax=estimate+1.96*std.error)) +
+  scale_colour_brewer(palette = "Set1", name=NULL) +
+  theme_bw() +
+  coord_flip() +
+  geom_hline(yintercept = 0) +
+  labs(x=NULL,
+       y="Estimated change in energy consumption") +
+  scale_y_continuous(labels=scales::percent_format()) +
+  theme(legend.position = c(0.85,0.15)) +
+  annotate(geom="rect",xmin=1.5,xmax=2.5,ymin=-Inf,ymax=Inf, fill="grey", alpha=0.5, colour=NA)
+
+ggsave(filename="../output_figures_tables/cer_energy_savings.png", width=6, height=4) 
 
 # Plot measure by measure coefficients
 mbm_coefs <- 

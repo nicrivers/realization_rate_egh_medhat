@@ -1,0 +1,137 @@
+\documentclass[8pt]{beamer}
+
+\usepackage{threeparttable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+
+
+
+\begin{document}
+
+\begin{frame}{Summary statistics}
+	I have regenerated the summary statistics.  There is a small change, and it should be reflected in the paper. This table is not formatted as well as the one in the paper, but the layout is exactly the same, so it should be quick to cut and paste into the paper.
+	
+	\input{../output_figures_tables/both_sumtable}
+\end{frame}
+
+\begin{frame}{Introduction}
+	The first results section should discuss research design, with a focus on sample selection. De we want the \textit{full sample}? A \textit{matched sample} consisting of the treated group and matched controls? The \textit{treated group only}? Each of these different approaches has been used in prior research (cite).  Each has different things to recommend and detract. With untreated controls, we can estimate the treatment effect over a longer window. We also can be less worried about ``forbidden regressions'' that compare later treated with earlier treated units. However, with untreated units as controls, we may be more concerned about selection.  The first section should elaborate on this discussion, with citations, and produce results.    I present results in the following tables.
+	
+	Unless otherwise stated, column definitions are as follows
+	\begin{enumerate}
+		\item Treated + all available controls
+		\item Treated + 1:1 matched controls based on pre-treatment consumption
+		\item Treated + 1:1 matched controls based on building characteristics
+		\item Treated + 1:1 matched controls based on pre-treatment consumption and building characteristics
+		\item Treated only
+	\end{enumerate}
+
+	Note that in the `Treated only'' samples, I only follow units until 2011. After 2012, all units are treated.
+	
+	Note that we do not need all of the tables that follow. I put them here for completeness (some may be dropped or go in appendix).
+\end{frame}
+
+\begin{frame}{TWFE estimates for total energy; monthly data}
+	\input{../output_figures_tables/twfe_monthly_energy.tex}
+\end{frame}
+
+\begin{frame}{TWFE estimates for gas; monthly data}
+	\input{../output_figures_tables/twfe_monthly_gas.tex}
+\end{frame}
+
+\begin{frame}{TWFE estimates for electricity; monthly data}
+	\input{../output_figures_tables/twfe_monthly_elec.tex}
+\end{frame}
+
+\begin{frame}{Sun + Abraham estimates}
+	The Sun and Abraham correction (like the Callaway and Sant'Anna corection) is estimated by interacting a cohort dummy with a time-to-treatment dummy. In our monthly data, we observe 49 different ``cohorts'' (i.e., households retrofit in 49 different months).  Our data has 200 different ``time to treatments'' (i.e., months before and after retrofit). This implies estimating a model with about 10,000 dummy variables.  This is not feasible. Instead, to estimate the Sun and Abraham model, I convert to annual data first. The results first show the TWFE estimates based on annual data, to confirm that this does not meaningfully disturb the results.
+\end{frame}
+
+\begin{frame}{TWFE estimates for energy; annual data}
+	\input{../output_figures_tables/twfe_annual_energy.tex}
+\end{frame}
+
+\begin{frame}{Sun+Abraham estimates for energy; annual data}
+	\input{../output_figures_tables/sunab_annual_energy.tex}
+\end{frame}
+
+\begin{frame}{Sun+Abraham estimates for gas; annual data}
+	\input{../output_figures_tables/sunab_annual_gas.tex}
+\end{frame}
+
+\begin{frame}{Sun+Abraham estimates for electricity; annual data}
+	\input{../output_figures_tables/sunab_annual_elec.tex}
+\end{frame}
+
+\begin{frame}{Event study plot}
+	The next results section should be the event study plot. Here, we emphasize the new estimators, and the potential problems with TWFE.  We can show that the TWFE estimator with participants only results in a very problematic estimate. We should explain that this is because it puts a lot of weight on comparisons between later-treated households and earlier-treated households -- this is a problematic comparison.  All other estimators deliver very similar estimates.
+	
+	The event study plot suggests that the effect of treatment is highly persistent. Even after 10 years, it looks like savings of about 15 percent are sustained.
+\end{frame}
+
+\begin{frame}{Event study plot}
+	\centering
+	\includegraphics[width=0.75\linewidth]{../output_figures_tables/event_study_plot.png}
+\end{frame}
+
+
+\begin{frame}{Measure by measure results}
+	As before, we produce measure-by-measure estimates of savings.
+\end{frame}
+
+\begin{frame}{Measure by measure results}
+	\includegraphics[width=\linewidth]{../output_figures_tables/mbm_energy_savings_combined}
+\end{frame}
+
+\begin{frame}{Complete envelope retrofits}
+	In the prior figure, we estimate complete energy retrofits using a linear combination of individual measures. Specific measures are listed in the current version of the paper.
+	
+	I have now added code to use the houses that acutally undergo a complete energy retrofit in order to estimate savings from this combination of measures.  Specifically, I define a complete energy retrofit as:
+	\begin{align*}
+		\text{complete envelope retrofit} = \\
+		\text{air sealing} +
+		\text{attic insulation} + \\
+		\text{window/door upgrade} +
+		\text{wall insulation} + \\
+		(\text{foundation header insulation} \text{ OR } \text{basement insulation})
+	\end{align*}
+
+	(Note that this is very slightly different from our imputed measure, which adds foundation header AND basement insulation to the other coefficients.)
+
+	There are a total of 15 homes that undergo this definition of a complete energy retrofit. To estimate the effect of this measure, I run a regression on a sample of these homes and untreated homes (and drop all homes that undergo some other retrofit). I control for gas furnace upgrades in this regression.
+\end{frame}
+
+\begin{frame}{Complate envelope retrofits}
+	Very similar estimates (except for electricity). Could either mention this, or insert the figure directly in the appendix.
+	
+	\includegraphics[width=\linewidth]{../output_figures_tables/cer_energy_savings}
+\end{frame}
+
+\begin{frame}{Projected energy savings}
+	We estimate \textit{projected} energy savings using a cross-sectional regression of projected energy savings on recommended measures.
+	
+		\includegraphics[width=\linewidth]{../output_figures_tables/projected_es_mbm}
+\end{frame}
+
+\begin{frame}{Realization rates}
+	Overall realization rate table. This is based on estimation in logs. THere is a table based on estimation in levels that can go in Appendix.
+	
+	\input{../output_figures_tables/overall_realizationrate_log}
+\end{frame}
+
+\begin{frame}{Realization rates measure by measure}
+	Here is the realization rate for energy only. The results directory also contains a figure separated by energy type.
+	
+	\includegraphics[width=\linewidth]{../output_figures_tables/mbm_realization_rate_all_energy}
+\end{frame}
+
+\begin{frame}{Dollar savings}
+	As we discussed, we calculate the average rebate in dollars. We calculate the \textit{annual} projected savings and the \textit{annual} realized savings. We divide the average rebate by the average annual savings (both realized and projected).	
+	
+	\input{../output_figures_tables/dollar_savings}
+\end{frame}
+
+\end{document}

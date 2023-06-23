@@ -2,12 +2,7 @@
 
 dat <- read_stata(
     here::here(
-<<<<<<< HEAD
         "processed_data", "final_merge_step_2_April_2023_control_group_anonymous.dta"
-        #"processed_data", "final_merge_step_2_oct11_control_group_anonymous.dta"
-=======
-        "processed_data", "final_merge_step_2_control_group_anonymous.dta"
->>>>>>> 12e4bd92f53648f1e849512da96b615ea67ebce6
     ),
     col_select = c(
         "PreretrofitENTRYDATE",
@@ -18,6 +13,7 @@ dat <- read_stata(
         "E11",
         "G11A",
         contains("Done"),
+        contains("Recommend"),
         contains("Electicalconsum"),
         contains("Electricalconsum"),
         contains("gasconsum"),
@@ -32,7 +28,7 @@ dat <- read_stata(
 # Define total energy consumption by adding gas an electricity
 dat <- dat %>%
   # Gas is in thousands of cubic feet.
-  # *** SHOULD CHECK THIS ***
+  # *** CHECK TO BE SURE ***
   # Convert to GJ by multiplying by 1.0551
   # See: https://www.nrcan.gc.ca/energy/energy-sources-distribution/natural-gas/natural-gas-primer/5641#conversion
   # Electricity is in kWh
@@ -60,6 +56,10 @@ dat <- dat %>%
     predicted_postretrofit_energy_gj_per_yr = postretrofit_energy,
   )
 
+# Original data
+nh_orig = length(unique(dat$id))
+paste("The original data contains ", nh_orig, " households")
+
 # Only keep households with both gas and electricity consumption
 with_energy <- dat %>%
   group_by(id) %>%
@@ -70,16 +70,42 @@ with_energy <- dat %>%
 
 dat <- inner_join(dat, with_energy)
 
+# After dropping houses missing energy data
+nh_en = length(unique(dat$id))
+paste("We drop ", nh_orig-nh_en, " households that report either no elec or gas data")
 
 
 # Load the tax data
 taxdat <- read_csv("../raw_data/tax - ksp.csv") %>%
-  rename(id = umLocationID) %>%
-  # There are some repeated lines in the tax data
-  distinct(id)
+  rename(id = umLocationID) 
+# There are some ids with multip buildings. Mostly commerical. Delete
+taxdat <- taxdat %>%
+  group_by(id) %>%
+  summarise(n=n()) %>%
+  filter(n==1) %>%
+  dplyr::select(id) %>%
+  inner_join(taxdat) %>%
+  filter(! Building_Type %in% c("NO MARKET BUILDING CLASS",
+                                "OFFICE BUILDING",
+                                "RETAIL STORE",
+                                "WAREHOUSE",
+                                "GARAGE",
+                                "MEDICAL OFFICE",
+                                "BARN",
+                                "STORE",
+                                "ELEVATOR",
+                                "APARTMENT"
+                                ))
 
-# Merge with data
+
+# Merge with data: we only keep observations for which we have tax data
 dat <- inner_join(dat, taxdat)
+
+# After dropping houses missing tax data
+nh_tx = length(unique(dat$id))
+paste("We drop ", nh_en-nh_tx, " households for which we cannot match with tax data")
+paste("We are left with a data set containing ", nh_tx, " households")
+
 
 # Create regression data
 # Define treated and post variables
@@ -93,3 +119,20 @@ rd <- dat %>%
            (treated & (cons_date > postretrofit_entrydate | cons_date < preretrofit_entrydate)))
 
 
+# Set up annual data
+rd_stag <- rd %>%
+  mutate(retrofit_start_year = year(preretrofit_entrydate),
+         retrofit_end_year = year(postretrofit_entrydate),
+         years_to_treatment = case_when(
+           consyear < retrofit_start_year ~ consyear - retrofit_start_year,
+           consyear > retrofit_end_year ~ consyear - retrofit_end_year,
+           is.na(retrofit_end_year) ~ -1000,
+           consyear >= retrofit_start_year & consyear <= retrofit_end_year ~ -2000
+         )) %>%
+  group_by(id,consyear,treated,years_to_treatment,retrofit_start_year, retrofit_end_year) %>%
+  summarise(elec=mean(elec, na.rm=T),
+            gas=mean(gas, na.rm=T),
+            energy=mean(energy, na.rm=T)) %>%
+  mutate(treated_post = (consyear > retrofit_end_year)) %>%
+  # Prior command generates NA for households that don't have retrofit end year. Replace with FALSE
+  replace_na(list(treated_post = FALSE))
