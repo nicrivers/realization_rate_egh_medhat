@@ -1,0 +1,19 @@
+% latex table generated in R 4.2.2 by xtable 1.8-4 package
+% Wed Jun 28 11:03:17 2023
+\begin{table}[ht]
+\centering
+\begin{tabular}{rr}
+  \hline
+ & x \\ 
+  \hline
+air\_seal\_paid\_inc & 90.12 \\ 
+  gas\_furn\_paid\_inc & 503.69 \\ 
+  attic\_paid\_inc & 335.98 \\ 
+  central\_ac\_paid\_inc & 28.11 \\ 
+  wind\_paid\_inc & 50.77 \\ 
+  doors\_paid\_inc & 8.06 \\ 
+  window\_ac\_paid\_inc & 0.00 \\ 
+  total\_paid\_inc & 1016.73 \\ 
+   \hline
+\end{tabular}
+\end{table}
