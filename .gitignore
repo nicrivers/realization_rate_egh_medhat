@@ -13,3 +13,6 @@ written/*.txt
 written/*.log
 written/*.bbl
 written/*.blg
+written/*.snm
+written/*.nav
+written/*synctex*
