@@ -213,14 +213,14 @@ projected_vs_realized <-
 
 ggplot(projected_vs_realized,
        aes(x=reorder(term, number))) +
-  geom_point(aes(y=estimated_savings,colour="Estimated")) +
+  geom_point(aes(y=estimated_savings, colour="Realized")) +
   geom_point(aes(y=projected_savings, colour="Projected")) +
   facet_wrap(~ factor(fuel,levels = c("gas","electricity","energy"))) +
   coord_flip() +
   geom_hline(yintercept = 0) +
   geom_errorbar(aes(ymin=estimated_savings-1.96*estimated_savings_se,
                     ymax=estimated_savings+1.96*estimated_savings_se,
-                    colour="Estimated"),
+                    colour="Realized"),
                 width=0.25) +
   geom_errorbar(aes(ymin=projected_savings-1.96*projected_savings_se,
                     ymax=projected_savings+1.96*projected_savings_se,
@@ -239,13 +239,13 @@ ggsave("../output_figures_tables/mbm_realization_rate.png", width=8, height=6)
 ## Energy only
 ggplot(projected_vs_realized %>% filter(fuel == "energy"),
        aes(x=reorder(term, number))) +
-  geom_point(aes(y=estimated_savings,colour="Estimated")) +
+  geom_point(aes(y=estimated_savings,colour="Realized")) +
   geom_point(aes(y=projected_savings, colour="Projected")) +
   coord_flip() +
   geom_hline(yintercept = 0) +
   geom_errorbar(aes(ymin=estimated_savings-1.96*estimated_savings_se,
                     ymax=estimated_savings+1.96*estimated_savings_se,
-                    colour="Estimated"),
+                    colour="Realized"),
                 width=0.25) +
   geom_errorbar(aes(ymin=projected_savings-1.96*projected_savings_se,
                     ymax=projected_savings+1.96*projected_savings_se,
