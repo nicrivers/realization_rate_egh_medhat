@@ -58,7 +58,7 @@ dat <- dat %>%
 
 # Original data
 nh_orig = length(unique(dat$id))
-paste("The original data contains ", nh_orig, " households")
+paste("The original data contains ", nh_orig, " households, including", length(unique(dat$id[!is.na(dat$postretrofit_entrydate)])), " participants and ", length(unique(dat$id[is.na(dat$postretrofit_entrydate)])), " non-participants.")
 
 # Only keep households with both gas and electricity consumption
 with_energy <- dat %>%
@@ -72,7 +72,7 @@ dat <- inner_join(dat, with_energy)
 
 # After dropping houses missing energy data
 nh_en = length(unique(dat$id))
-paste("We drop ", nh_orig-nh_en, " households that report either no elec or gas data")
+paste("We drop ", nh_orig-nh_en, " households that report either no elec or gas data. We now have ", length(unique(dat$id[!is.na(dat$postretrofit_entrydate)])), " participants and ", length(unique(dat$id[is.na(dat$postretrofit_entrydate)])), " non-participants.")
 
 
 # Load the tax data
@@ -104,7 +104,7 @@ dat <- inner_join(dat, taxdat)
 # After dropping houses missing tax data
 nh_tx = length(unique(dat$id))
 paste("We drop ", nh_en-nh_tx, " households for which we cannot match with tax data")
-paste("We are left with a data set containing ", nh_tx, " households")
+paste("We are left with a data set containing ", nh_tx, " households including ", length(unique(dat$id[!is.na(dat$postretrofit_entrydate)])), " participants and ", length(unique(dat$id[is.na(dat$postretrofit_entrydate)])), " non-participants.")
 
 
 # Create regression data
