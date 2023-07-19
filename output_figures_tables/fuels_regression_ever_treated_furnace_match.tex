@@ -1,0 +1,27 @@
+
+\begingroup
+\centering
+\begin{tabular}{lccc}
+   \tabularnewline \midrule \midrule
+   Dependent Variables: & log(gas)        & log(elec) & log(energy)\\  
+   Model:               & (1)             & (2)       & (3)\\  
+   \midrule
+   \emph{Variables}\\
+   treated\_postTRUE    & -0.2207$^{***}$ & 0.0226    & -0.1576$^{***}$\\   
+                        & (0.0092)        & (0.0157)  & (0.0108)\\   
+   \midrule
+   \emph{Fixed-effects}\\
+   id                   & Yes             & Yes       & Yes\\  
+   cons\_date           & Yes             & Yes       & Yes\\  
+   \midrule
+   \emph{Fit statistics}\\
+   Observations         & 75,078          & 75,798    & 74,842\\  
+   R$^2$                & 0.84109         & 0.54309   & 0.81334\\  
+   Within R$^2$         & 0.01790         & 0.00017   & 0.01381\\  
+   \midrule \midrule
+   \multicolumn{4}{l}{\emph{Clustered (id \& cons\_date) standard-errors in parentheses}}\\
+   \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+\end{tabular}
+\par\endgroup
+
+
