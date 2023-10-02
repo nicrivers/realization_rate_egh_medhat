@@ -23,9 +23,9 @@ match_data_ever_treated <- match.data(ever_treated_match) %>%
   dplyr::select(id, weights) %>%
   inner_join(rd_ever_treated)
 
-m1_ever_treated_match_gas <- feols(log(gas) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
-m1_ever_treated_match_elec <- feols(log(elec) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
-m1_ever_treated_match_energy <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data_ever_treated, cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
+m1_ever_treated_match_gas <- feols(log(gas) ~ treated_post | id + cons_date, data=match_data_ever_treated %>% filter(consyear < 2012), cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
+m1_ever_treated_match_elec <- feols(log(elec) ~ treated_post | id + cons_date, data=match_data_ever_treated  %>% filter(consyear < 2012), cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
+m1_ever_treated_match_energy <- feols(log(energy) ~ treated_post | id + cons_date, data=match_data_ever_treated  %>% filter(consyear < 2012), cluster = ~id+cons_date, weights = match_data_ever_treated$weights)
 
 etable(list(m1_ever_treated_match_gas, m1_ever_treated_match_elec, m1_ever_treated_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_furnace_match.tex", replace = TRUE)
 
