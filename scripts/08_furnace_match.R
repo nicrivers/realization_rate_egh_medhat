@@ -51,3 +51,7 @@ res_sunab_match_energy = feols(log(energy) ~ sunab(retrofit_start_year, consyear
 
 etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg = "att")
 etable(list(res_sunab_match_gas, res_sunab_match_elec, res_sunab_match_energy), agg = "att", tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_furnace_match_sunab.tex", replace = TRUE)
+
+# TWFE estimate annual data
+res_twfe_match_energy <- feols(log(energy) ~ treated_post | id + consyear , data=rd_stag_ever_treated %>% filter(years_to_treatment != -2000, treated == TRUE, consyear < 2012), cluster = ~id+consyear, weights = ~weights)
+etable(list(res_twfe_match_energy), tex=TRUE, file="../output_figures_tables/fuels_regression_ever_treated_furnace_match_annual_twfe.tex", replace = TRUE)
