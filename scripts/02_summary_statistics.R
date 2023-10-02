@@ -25,3 +25,16 @@ st(data = rd %>%
    group = "non_participant",
    file = "../output_figures_tables/both_sumtable.tex",out="latex",
    title = "Summary statistics\\label{tab:sumstat}")
+
+# Summarise pre- and post-retrofit consumption for participants only
+st(data=rd %>%
+  # Keep only participants
+  filter(!is.na(predicted_postretrofit_gas_gj_per_yr)) %>%
+  group_by(id, post) %>%
+  summarise(across(contains("actual"), mean, na.rm=T)) %>%
+  # Order variables correctly
+  dplyr::select( 
+                 post, "Actual gas consumption (GJ/year)"="actual_gas_gj_per_yr", "Actual electricity consumption (GJ/year)"="actual_elec_gj_per_yr", "Actual energy consumption (GJ/year)"="actual_energy_gj_per_yr" ),
+group = "post",
+file = "../output_figures_tables/participant_prepost_sumtable.tex",out="latex",
+title = "Summary statistics\\label{tab:sumstat_prepost}")
