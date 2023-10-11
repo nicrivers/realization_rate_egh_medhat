@@ -180,3 +180,60 @@ ggplot(hd,
   coord_cartesian(ylim=c(0,NA)) +
   geom_hline(yintercept = 0)
 ggsave("../output_figures_tables/gas_save_vs_assessvalue_participantsonly.png", width=6, height=6)
+
+# Savings for program participants
+hd <- rd_stag_cuts %>%
+  group_by(id, assess_bin) %>%
+  summarise(TotalAssesmentValue = mean(TotalAssesmentValue)) %>%
+  group_by(assess_bin) %>%
+  summarise(TotalAssesmentValue = mean(TotalAssesmentValue)) %>%
+  inner_join(res_twfe_full_sample_annual_gas %>%
+              tidy() %>%
+              rename(assess_bin = term) %>%
+              mutate(assess_bin = gsub("treated_post::TRUE:assess_bin::","", assess_bin))
+  )
+
+ggplot(hd, aes(x=TotalAssesmentValue, y=-estimate, ymin=-estimate - 1.96*std.error, ymax=-estimate + 1.96*std.error)) +
+  geom_point() +
+  geom_line() +
+  geom_ribbon(alpha = 0.1, fill="blue")  +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  scale_y_continuous(name="Average annual gas savings", labels=scales::percent_format()) +
+  theme_bw() +
+  coord_cartesian(ylim=c(0,NA)) +
+  geom_hline(yintercept = 0)
+ggsave("../output_figures_tables/gas_save_vs_assessvalue_percent_participantsonly.png", width=6, height=6)
+
+# Percent savings for all
+pred_gas_save <- rd_stag_cuts %>%
+  mutate(consumption_with_retrofits = predict(res_twfe_full_sample_annual_gas, .)) %>%
+  mutate(treated_post = FALSE) %>%
+  mutate(consumption_without_retrofits = predict(res_twfe_full_sample_annual_gas, .)) %>%
+  mutate(diff = consumption_with_retrofits - consumption_without_retrofits) %>%
+  mutate(gas_savings_percent =  (- exp(diff) + 1))
+
+hd <- pred_gas_save %>% 
+  group_by(id) %>% 
+  # Only keep observations for 2018
+  filter(consyear == 2018) %>% 
+  group_by(assess_bin) %>% 
+  summarise(mean_gas_savings=mean(gas_savings_percent, na.rm=T), 
+            sd_gas_savings = sd(gas_savings_percent, na.rm=T),
+            count = n(),
+            avg_value = mean(TotalAssesmentValue)) %>%
+  mutate(se_gas_savings = sd_gas_savings / sqrt(count))
+
+ggplot(hd, 
+       aes(x=avg_value,
+           y=mean_gas_savings,
+           ymin = mean_gas_savings - 1.96*se_gas_savings,
+           ymax = mean_gas_savings + 1.96*se_gas_savings)) + 
+  geom_point() +
+  geom_line() +
+  geom_ribbon(alpha = 0.1, fill="blue") +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  scale_y_continuous(name="Average annual gas savings", labels=scales::percent_format()) +
+  theme_bw() +
+  coord_cartesian(ylim=c(0,NA)) +
+  geom_hline(yintercept = 0)
+ggsave("../output_figures_tables/gas_save_percent_vs_assessvalue_all.png", width=6, height=6)
