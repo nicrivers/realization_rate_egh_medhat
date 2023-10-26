@@ -103,6 +103,7 @@ m1_mbm <- feols(energy ~ i(treated_post, air_sealing, ref=0) +
                          i(treated_post, walls_insulation, ref=0) + 
                          i(treated_post, natural_gas_furnace, ref=0) | id + year , data=rd_year, cluster = ~id+year)
 
+
 projected_mbm_energy <- feols( (postretrofit_energy - preretrofit_energy) ~ 
                                 air_sealing + 
                                 ceiling_insulation +  
@@ -140,3 +141,23 @@ mbm_reb <- reb %>%
 
   
 print(xtable::xtable(mbm_reb), "../output_figures_tables/dollar_savings_mbm.tex", type="latex")
+
+
+# Weighted average savings
+av_sav <- rd_ps %>%
+  dplyr::select(id, air_sealing, bsmt_insulation, ceiling_insulation, fnd_header, natural_gas_furnace, walls_insulation, windowsand_doors) %>%
+  pivot_longer(cols=-1, names_to = "measure", values_to = "didit") %>%
+  inner_join(
+mbm_reb %>%
+  dplyr::select(measure, dollar_bill_saving_projected, dollar_bill_saving_realized)
+) %>%
+  group_by(id) %>%
+  mutate(projected_bill_savings = didit * dollar_bill_saving_projected,
+         realized_bill_savings = didit * dollar_bill_saving_realized) %>%
+  summarise(projected_bill_savings = sum(projected_bill_savings),
+            realized_bill_savings = sum(realized_bill_savings, na.rm=T)) %>%
+  ungroup() %>%
+  summarise(projected_bill_savings = mean(projected_bill_savings),
+            realized_bill_savings = mean(realized_bill_savings))
+
+print(xtable::xtable(av_sav), "../output_figures_tables/av_sav.tex", type="latex")

@@ -1,7 +1,15 @@
 # Histogram of rebate received vs. home assessed value
 
 # Where will the breaks be in assessed value to create bins
-breaks_val <- c(-Inf, 5e4, 1e5, 1.25e5, 1.5e5, 1.75e5, 2e5, 2.25e5, 2.5e5, 2.75e5, 3e5, 3.5e5, 4e5, 5e5, 7.5e5, Inf)
+breaks_val <- c(-Inf, 5e4, 1e5, 1.25e5, 1.5e5, 1.75e5, 2e5, 2.25e5, 2.5e5, 2.75e5, 3e5, 3.5e5, 4e5, 5e5, Inf)
+
+# Mean house value
+mean_house_val <- rd %>% 
+  group_by(id) %>% 
+  summarise(avg_value=mean(TotalAssesmentValue)) %>%
+  ungroup() %>%
+  summarise(mean_val = mean(avg_value)) %>%
+  pull()
 
 # Average rebate received vs. assessed value, including participants and non-participants
 hd <- rd %>% 
@@ -30,7 +38,8 @@ ggplot(hd,
   scale_y_continuous(name="Average rebate claimed", labels=scales::dollar_format()) +
   theme_bw() +
   coord_cartesian(ylim=c(0,NA)) +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/rebate_vs_assessvalue_all.png", width=6, height=6)
 
 # Program participation vs. assessed value
@@ -59,7 +68,8 @@ ggplot(hd,
   scale_y_continuous(name="Participation rate", labels=scales::percent_format()) +
   theme_bw() +
   coord_cartesian(ylim=c(0,NA)) +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/participate_vs_assessvalue_all.png", width=6, height=6)
 
 # Rebate vs. assessed value conditional on participation
@@ -89,7 +99,8 @@ ggplot(hd,
   scale_y_continuous(name="Average rebate claimed", labels=scales::dollar_format()) +
   theme_bw() +
   coord_cartesian(ylim=c(0,NA)) +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/rebate_vs_assessvalue_participantsonly.png", width=6, height=6)
 
 # Histogram of assessed value
@@ -106,8 +117,20 @@ ggplot(hd,
            y=Count)) +
   geom_col() +
   scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
-  theme_bw()
+  theme_bw()  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/count_vs_assessvalue_all.png", width=6, height=6)
+
+# As density instead
+hd <- rd %>% 
+  group_by(id) %>% 
+  summarise(avg_value=mean(TotalAssesmentValue))
+
+ggplot(hd %>% filter(avg_value < 5e5),
+       aes(x=avg_value)) +
+  geom_density() +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  theme_bw()
 
 # TWFE estimates for full sample by assessed value
 rd_stag_cuts <- rd %>% 
@@ -151,7 +174,8 @@ ggplot(hd,
   scale_y_continuous(name="Average annual gas savings", labels=scales::dollar_format()) +
   theme_bw() +
   coord_cartesian(ylim=c(0,NA)) +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/gas_save_vs_assessvalue_all.png", width=6, height=6)
 
 hd <- pred_gas_save %>% 
@@ -178,7 +202,8 @@ ggplot(hd,
   scale_y_continuous(name="Average annual gas savings", labels=scales::dollar_format()) +
   theme_bw() +
   coord_cartesian(ylim=c(0,NA)) +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/gas_save_vs_assessvalue_participantsonly.png", width=6, height=6)
 
 # Savings for program participants
@@ -201,7 +226,8 @@ ggplot(hd, aes(x=TotalAssesmentValue, y=-estimate, ymin=-estimate - 1.96*std.err
   scale_y_continuous(name="Average annual gas savings", labels=scales::percent_format()) +
   theme_bw() +
   coord_cartesian(ylim=c(0,NA)) +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/gas_save_vs_assessvalue_percent_participantsonly.png", width=6, height=6)
 
 # Percent savings for all
@@ -235,5 +261,48 @@ ggplot(hd,
   scale_y_continuous(name="Average annual gas savings", labels=scales::percent_format()) +
   theme_bw() +
   coord_cartesian(ylim=c(0,NA)) +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/gas_save_percent_vs_assessvalue_all.png", width=6, height=6)
+
+
+# Estimated percent gas bill savings for program participants only
+hd <- pred_gas_save %>%
+  filter(treated == TRUE, 
+         consyear == 2015) %>%
+  mutate(monthly_fixed_charge = 18.50,
+         threshold = 20.86,
+         gas_without_retrofit = gas * (1 - diff),
+         below_threshold_with_retrofit = case_when(gas < threshold ~ gas,
+                                     gas >= threshold ~ threshold),
+         above_threshold_with_retrofit = case_when(gas < threshold ~ 0,
+                                     gas >= threshold ~ gas - threshold),
+         variable_charge_with_retrofit = 6.22 * below_threshold_with_retrofit + (6.22+1.01) * above_threshold_with_retrofit,
+         below_threshold_without_retrofit = case_when(gas_without_retrofit < threshold ~ gas_without_retrofit,
+                                                      gas_without_retrofit >= threshold ~ threshold),
+         above_threshold_without_retrofit = case_when(gas_without_retrofit < threshold ~ 0,
+                                                   gas_without_retrofit >= threshold ~ gas_without_retrofit - threshold),
+         variable_charge_without_retrofit = 6.22 * below_threshold_without_retrofit + (6.22+1.01) * above_threshold_without_retrofit,
+         percent_bill_save = (monthly_fixed_charge + variable_charge_with_retrofit) / (monthly_fixed_charge + variable_charge_without_retrofit) - 1) %>%
+          group_by(assess_bin) %>% 
+          summarise(mean_bill_save_percent=-mean(percent_bill_save, na.rm=T), 
+            sd_bill_save = sd(percent_bill_save, na.rm=T),
+            count = n(),
+            avg_value = mean(TotalAssesmentValue)) %>%
+  mutate(se = sd_bill_save / sqrt(count))
+
+ggplot(hd, 
+       aes(x=avg_value,
+           y=mean_bill_save_percent,
+           ymin = mean_bill_save_percent - 1.96*se,
+           ymax = mean_bill_save_percent + 1.96*se)) + 
+  geom_point() +
+  geom_line() +
+  geom_ribbon(alpha = 0.1, fill="blue") +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  scale_y_continuous(name="Average percent gas bill savings", labels=scales::percent_format()) +
+  theme_bw() +
+  coord_cartesian(ylim=c(0,NA)) +
+  geom_hline(yintercept = 0)  +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
+ggsave("../output_figures_tables/bill_save_percent_vs_assessvalue_all.png", width=6, height=6)
