@@ -105,7 +105,7 @@ m2_energy_mbm <- feols(log(energy) ~ i(treated_post, air_sealing, ref=0) +
                        i(treated_post, natural_gas_furnace, ref=0)  | id + cons_date, data=rd_mbm, cluster = ~id+cons_date)
 
 etable(m2_gas_mbm, m2_elec_mbm, m2_energy_mbm)
-etable(m2_gas_mbm, m2_elec_mbm, m2_energy_mbm, tex=TRUE, file="../output_figures_tables/mbm_results_es.tex")
+etable(m2_gas_mbm, m2_elec_mbm, m2_energy_mbm, tex=TRUE, file="../output_figures_tables/mbm_results_es.tex", replace=TRUE)
 
 # Measure savings from all thermal envelope measures combined
 deep_rf_estimated_gas <- glht(m2_gas_mbm, linfct = "`treated_post::TRUE:air_sealing` + 

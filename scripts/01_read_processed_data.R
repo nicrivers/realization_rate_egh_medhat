@@ -2,7 +2,7 @@
 
 dat <- read_stata(
     here::here(
-        "processed_data", "final_merge_step_2_May_control_group_anonymous.dta"
+        "processed_data", "final_merge_step_2_July_control_anonymous.dta"
     ),
     col_select = c(
         "PreretrofitENTRYDATE",
