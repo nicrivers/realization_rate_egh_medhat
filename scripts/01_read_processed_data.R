@@ -12,6 +12,7 @@ dat <- read_stata(
         "consmonth",
         "E11",
         "G11A",
+        "PreRetrofitHEATAFUE",
         contains("Done"),
         contains("Recommend"),
         contains("Electicalconsum"),

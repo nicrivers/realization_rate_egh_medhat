@@ -306,3 +306,136 @@ ggplot(hd,
   geom_hline(yintercept = 0)  +
   geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
 ggsave("../output_figures_tables/bill_save_percent_vs_assessvalue_all.png", width=6, height=6)
+
+
+#### MEASURE BY MEASURE ANALYSIS
+hd <- rd %>% 
+  group_by(id) %>%
+  mutate(crap_furnace = as.numeric(pre_retrofit_furnacetype == "Furnace with continuous pilot")) %>%
+  filter(treated == TRUE) %>%
+  summarise(TotalAssesmentValue=mean(TotalAssesmentValue),
+            crap_furnace = mean(crap_furnace, na.rm=T)) %>% 
+  mutate(assess_bin = cut(TotalAssesmentValue, breaks_val)) %>% 
+  group_by(assess_bin) %>% 
+  summarise(mean_crap_furnace=mean(crap_furnace), 
+            sd_crap_furnace = sd(crap_furnace),
+            count = n(),
+            avg_value = mean(TotalAssesmentValue)) %>%
+  mutate(se_crap_furnace = sd_crap_furnace / sqrt(count))
+
+
+ggplot(hd, 
+       aes(x=avg_value,
+           y=mean_crap_furnace,
+           ymin = mean_crap_furnace - 1.96*se_crap_furnace,
+           ymax = mean_crap_furnace + 1.96*se_crap_furnace)) + 
+  geom_point() +
+  geom_line() +
+  geom_ribbon(alpha = 0.1, fill="blue") +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  scale_y_continuous(name="Continuous pilot furnace", labels=scales::percent_format()) +
+  theme_bw() +
+  coord_cartesian(ylim=c(0,NA)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
+ggsave("../output_figures_tables/crap_furnaces.png", width=6, height=6)
+
+# good furnace
+hd <- rd %>% 
+  group_by(id) %>%
+  mutate(good_furnace = as.numeric(pre_retrofit_furnacetype == "Condensing furnace")) %>%
+  filter(treated == TRUE) %>%
+  summarise(TotalAssesmentValue=mean(TotalAssesmentValue),
+            good_furnace = mean(good_furnace, na.rm=T)) %>% 
+  mutate(assess_bin = cut(TotalAssesmentValue, breaks_val)) %>% 
+  group_by(assess_bin) %>% 
+  summarise(mean_good_furnace=mean(good_furnace), 
+            sd_good_furnace = sd(good_furnace),
+            count = n(),
+            avg_value = mean(TotalAssesmentValue)) %>%
+  mutate(se_good_furnace = sd_good_furnace / sqrt(count))
+
+
+ggplot(hd, 
+       aes(x=avg_value,
+           y=mean_good_furnace,
+           ymin = mean_good_furnace - 1.96*se_good_furnace,
+           ymax = mean_good_furnace + 1.96*se_good_furnace)) + 
+  geom_point() +
+  geom_line() +
+  geom_ribbon(alpha = 0.1, fill="blue") +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  scale_y_continuous(name="Condensing furnace", labels=scales::percent_format()) +
+  theme_bw() +
+  coord_cartesian(ylim=c(0,NA)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
+ggsave("../output_figures_tables/good_furnaces.png", width=6, height=6)
+
+# Air sealing
+hd <- rd %>% 
+  group_by(id) %>%
+  filter(treated == TRUE) %>%
+  replace_na(list(air_sealing_ugr_done=0)) %>%
+  summarise(TotalAssesmentValue=mean(TotalAssesmentValue),
+            air_seal = mean(air_sealing_ugr_done)) %>% 
+  replace_na(list(total_rebate=0)) %>% 
+  mutate(assess_bin = cut(TotalAssesmentValue, breaks_val)) %>% 
+  group_by(assess_bin) %>% 
+  summarise(mean_air_seal=mean(air_seal), 
+            sd_air_seal = sd(air_seal),
+            count = n(),
+            avg_value = mean(TotalAssesmentValue)) %>%
+  mutate(se_air_seal = sd_air_seal / sqrt(count))
+
+
+ggplot(hd, 
+       aes(x=avg_value,
+           y=mean_air_seal,
+           ymin = mean_air_seal - 1.96*se_air_seal,
+           ymax = mean_air_seal + 1.96*se_air_seal)) + 
+  geom_point() +
+  geom_line() +
+  geom_ribbon(alpha = 0.1, fill="blue") +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  scale_y_continuous(name="Air sealing completed", labels=scales::percent_format()) +
+  theme_bw() +
+  coord_cartesian(ylim=c(0,NA)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
+ggsave("../output_figures_tables/who_did_air_sealing.png", width=6, height=6)
+
+# attic insulation
+hd <- rd %>% 
+  group_by(id) %>%
+  filter(treated == TRUE) %>%
+  replace_na(list(ceiling_insulation_ugr_done=0)) %>%
+  summarise(TotalAssesmentValue=mean(TotalAssesmentValue),
+            ceiling = mean(ceiling_insulation_ugr_done)) %>% 
+  replace_na(list(total_rebate=0)) %>% 
+  mutate(assess_bin = cut(TotalAssesmentValue, breaks_val)) %>% 
+  group_by(assess_bin) %>% 
+  summarise(mean_ceiling=mean(ceiling), 
+            sd_ceiling = sd(ceiling),
+            count = n(),
+            avg_value = mean(TotalAssesmentValue)) %>%
+  mutate(se_ceiling = sd_ceiling / sqrt(count))
+
+
+ggplot(hd, 
+       aes(x=avg_value,
+           y=mean_ceiling,
+           ymin = mean_ceiling - 1.96*se_ceiling,
+           ymax = mean_ceiling + 1.96*se_ceiling)) + 
+  geom_point() +
+  geom_line() +
+  geom_ribbon(alpha = 0.1, fill="blue") +
+  scale_x_continuous(name="Average assessed value", labels=scales::dollar_format()) +
+  scale_y_continuous(name="Attic upgrade completed", labels=scales::percent_format()) +
+  theme_bw() +
+  coord_cartesian(ylim=c(0,NA)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = mean_house_val, colour="red", linetype="dashed")
+ggsave("../output_figures_tables/who_did_attic_insulation.png", width=6, height=6)
+
+
