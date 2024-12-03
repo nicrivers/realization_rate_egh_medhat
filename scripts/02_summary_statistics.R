@@ -23,7 +23,8 @@ st(data = rd %>%
                     "Air sealing"="air_sealing", "Attic insulation"="ceiling_insulation", "Wall insulation"="walls_insulation", "Basement insulation"="bsmt_insulation", "Foundation header insulation"="fnd_header", "Window or door upgrade"="windowsand_doors", "Central A/C upgrade"="central_ac", "Natural gas furnace upgrade"="natural_gas_furnace", 
                     "Predicted pre-retrofit gas consumption (GJ/year)"="predicted_preretrofit_gas_gj_per_yr", "Predicted pre-retrofit electricity consumption (GJ/year)"="predicted_preretrofit_elec_gj_per_yr", "Predicted pre-retrofit energy consumption (GJ/year)"="predicted_preretrofit_energy_gj_per_yr", "Predicted post-retrofit gas consumption (GJ/year)"="predicted_postretrofit_gas_gj_per_yr", "Predicted post-retrofit electricity consumption (GJ/year)"="predicted_postretrofit_elec_gj_per_yr", "Predicted post-retrofit energy consumption (GJ/year)"="predicted_postretrofit_energy_gj_per_yr"),
    group = "non_participant",
-   file = "../output_figures_tables/both_sumtable.tex",out="latex",
+   group.test = list(numeric.test = vtable:::groupt.it, format='^{{stars}}$'),
+   file = "../output_figures_tables/both_sumtable.tex",out="latex", 
    title = "Summary statistics\\label{tab:sumstat}")
 
 # Summarise pre- and post-retrofit consumption for participants only

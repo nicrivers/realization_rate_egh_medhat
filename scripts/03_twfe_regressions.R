@@ -255,3 +255,22 @@ res_sunab_partic_elec = feols(log(elec) ~ sunab(retrofit_end_year, consyear) | i
 
 etable(res_sunab_full_sample_elec, res_sunab_m_pt_elec, res_sunab_m_build_elec, res_sunab_m_pt_b_elec, res_sunab_partic_elec, agg = "att", 
        tex=T, replace=T, file="../output_figures_tables/sunab_annual_elec.tex")
+
+
+# Robustness checks to drop zero and near-zero consumption
+res_twfe_full_sample_annual = feols(log(energy) ~ treated_post | id + consyear, full_sample_annual %>% filter(years_to_treatment != -2000), cluster=~id + consyear)
+
+# Drop periods where energy consumption is below 1st percentile
+p1_sample <- full_sample_annual %>% ungroup() %>% filter(years_to_treatment != -2000, !is.na(energy)) %>% mutate(limit = quantile(energy,probs = 0.01)) %>% filter(energy >= limit)
+res_twfe_full_sample_annual_p1 = feols(log(energy) ~ treated_post | id + consyear, p1_sample, cluster=~id + consyear)
+
+# Drop periods where energy consumption is below 5th percentile
+p5_sample <- full_sample_annual %>% ungroup() %>% filter(years_to_treatment != -2000, !is.na(energy)) %>% mutate(limit = quantile(energy,probs = 0.05)) %>% filter(energy >= limit)
+res_twfe_full_sample_annual_p5 = feols(log(energy) ~ treated_post | id + consyear, p5_sample, cluster=~id + consyear)
+
+
+
+etable(res_twfe_full_sample_annual, res_twfe_full_sample_annual_p1, res_twfe_full_sample_annual_p5, tex=T,
+       replace=T, file="../output_figures_tables/twfe_drop_low.tex")
+
+
